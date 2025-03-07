@@ -4,6 +4,7 @@ import generateTokens from "../lib/generateTokens.js";
 import redis from "../lib/redis.js";
 import jwt from "jsonwebtoken";
 import resetAccessToken from "../lib/resetAccessToken.js";
+import sendSms from "../lib/sendSms.js";
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -107,12 +108,15 @@ export const tokenRefresher = async (req, res) => {
       res.status(400).json({ message: "Invalid Refresh Token" });
     }
     // Providing a new Access Token
-    const accessToken = jwt.sign({ userId:decoded.userId }, process.env.ACCESS_SECRET, {
-      expiresIn: "15m",
-    });
+    const accessToken = jwt.sign(
+      { userId: decoded.userId },
+      process.env.ACCESS_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
     resetAccessToken(res, accessToken);
     res.status(200).json({ message: "Token Refreshed Successfully" });
-
   } catch (error) {
     console.log("Error in tokenRefresher", error.message);
     res.status(500).json({ message: error.message });
@@ -121,9 +125,63 @@ export const tokenRefresher = async (req, res) => {
 
 // export const getProfile = async (req, res) => {
 //   try {
-    
+
 //   } catch (error) {
 //     console.log("Error in getProfile", error.message);
 //     res.status(500).json({ message: error.message });
 //   }
 // }
+
+export const sendOtp = async (req, res) => {
+  try {
+    // console.log("Trying to Send OTP");
+    const { phone } = req.body;
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otpExpiry = Date.now() + 5 * 60 * 1000;
+    const user = await User.findOne({ phone });
+    if (!user) {
+      return res.status(400).json({ message: "User Not Found" });
+    }
+
+    // Updating otp fields
+    user.otp = otp;
+    user.otp_expiry= otpExpiry;
+    await user.save({validateBeforeSave: false});
+    const result = await sendSms(phone, otp);
+    if (result.success) {
+      return res
+        .status(200)
+        .json({ success: true, message: "OTP Sent Successfully" });
+    } else {
+      return res.status(500).json({ success: false, message: result.message });
+    }
+  } catch (error) {
+    console.log("Error in sendOtp", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    const user = await User.findOne({ phone });
+    if (!user) {
+      return res.status(400).json({ message: "User Not Found" });
+    }
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+    if (user.otp_expiry < Date.now()) {
+      return res.status(400).json({ message: "OTP Expired" });
+    }
+    user.otp = null;
+    user.otp_expiry = null;
+    // update verification
+    user.isVerified = true;
+    await user.save({validateBeforeSave: false});
+    res.status(200).json({ message: "OTP Verified Successfully" });
+  } catch (error) {
+    console.log("Error in verifyOtp", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
