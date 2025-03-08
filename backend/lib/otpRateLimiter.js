@@ -1,5 +1,5 @@
 // lib/otpRateLimiter.js
-import redis from './redis';
+import redis from './redis.js';
 
 /**
  * Rate limiter specific for OTP resend functionality

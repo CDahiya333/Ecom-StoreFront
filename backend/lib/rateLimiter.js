@@ -1,5 +1,5 @@
 // lib/rateLimiter.js
-import redis from './redis';
+import redis from './redis.js';
 
 /**
  * Rate limiter implementation using Redis
