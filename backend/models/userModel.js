@@ -39,12 +39,14 @@ const userSchema = new mongoose.Schema(
       default: "customer",
     },
     phone: String,
-    otp: String,
-    otp_expiry: Date,
+    otpPhone: String,
+    otp_expiry_Phone: Date,
+    otpEmail: String,
+    otp_expiry_Email: Date,
     isVerified: {
       type: Boolean,
       default: false
-    }
+    },
   },
   { timestamps: true }
 );

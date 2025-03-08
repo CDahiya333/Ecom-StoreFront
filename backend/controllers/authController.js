@@ -5,6 +5,7 @@ import redis from "../lib/redis.js";
 import jwt from "jsonwebtoken";
 import resetAccessToken from "../lib/resetAccessToken.js";
 import sendSms from "../lib/sendSms.js";
+import sendEmail from "../lib/sendEmail.js";
 
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -102,10 +103,18 @@ export const tokenRefresher = async (req, res) => {
     if (!refreshToken) {
       return res.status(401).json({ message: "No refresh token provided" });
     }
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    } catch (err) {
+      return res
+        .status(403)
+        .json({ message: "Invalid or expired refresh token" });
+    }
+
     const storedToken = await redis.get(`refresh_token:${decoded.userId}`);
     if (storedToken !== refreshToken) {
-      res.status(400).json({ message: "Invalid Refresh Token" });
+      return res.status(400).json({ message: "Invalid Refresh Token" });
     }
     // Providing a new Access Token
     const accessToken = jwt.sign(
@@ -134,54 +143,129 @@ export const tokenRefresher = async (req, res) => {
 
 export const sendOtp = async (req, res) => {
   try {
-    // console.log("Trying to Send OTP");
-    const { phone } = req.body;
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    const otpExpiry = Date.now() + 5 * 60 * 1000;
-    const user = await User.findOne({ phone });
-    if (!user) {
-      return res.status(400).json({ message: "User Not Found" });
+    const { phone, email } = req.body;
+
+    if (!phone || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Both phone and email are required",
+      });
     }
 
-    // Updating otp fields
-    user.otp = otp;
-    user.otp_expiry= otpExpiry;
-    await user.save({validateBeforeSave: false});
-    const result = await sendSms(phone, otp);
-    if (result.success) {
-      return res
-        .status(200)
-        .json({ success: true, message: "OTP Sent Successfully" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Generate OTPs
+    const otpPhone = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpEmail = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiryPhone = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+    const otpExpiryEmail = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+
+    // Update user with new OTPs
+    user.otpPhone = otpPhone;
+    user.otpEmail = otpEmail;
+    user.otp_expiry_Phone = otpExpiryPhone;
+    user.otp_expiry_Email = otpExpiryEmail;
+
+    await user.save({ validateBeforeSave: false });
+
+    // Send Email OTP
+    const emailResult = await sendEmail(email, otpEmail);
+
+    // Send SMS OTP
+    const smsResult = await sendSms(phone, otpPhone);
+
+    if (smsResult.success && emailResult.success) {
+      return res.status(200).json({
+        success: true,
+        message: "Verification codes sent to your phone and email",
+      });
     } else {
-      return res.status(500).json({ success: false, message: result.message });
+      let errorMessage = "Failed to send verification codes";
+      if (!smsResult.success) errorMessage += ": SMS error";
+      if (!emailResult.success) errorMessage += ": Email error";
+
+      return res.status(500).json({
+        success: false,
+        message: errorMessage,
+      });
     }
   } catch (error) {
-    console.log("Error in sendOtp", error.message);
-    res.status(500).json({ message: error.message });
+    console.log("Error in sendOtp:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 export const verifyOtp = async (req, res) => {
   try {
-    const { phone, otp } = req.body;
-    const user = await User.findOne({ phone });
+    const { email, phoneOtp, emailOtp } = req.body;
+
+    if (!email || !phoneOtp || !emailOtp) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and both verification codes are required",
+      });
+    }
+
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User Not Found" });
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
     }
-    if (user.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
+
+    // Check if OTPs match
+    const isPhoneOtpValid = user.otpPhone === phoneOtp;
+    const isEmailOtpValid = user.otpEmail === emailOtp;
+
+    // Check if OTPs are expired
+    const isPhoneOtpExpired =
+      user.otp_expiry_Phone && user.otp_expiry_Phone < new Date();
+    const isEmailOtpExpired =
+      user.otp_expiry_Email && user.otp_expiry_Email < new Date();
+
+    if (isPhoneOtpExpired || isEmailOtpExpired) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification Code has expired",
+      });
     }
-    if (user.otp_expiry < Date.now()) {
-      return res.status(400).json({ message: "OTP Expired" });
+
+    if (!isPhoneOtpValid || !isEmailOtpValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification code(s)",
+      });
     }
-    user.otp = null;
-    user.otp_expiry = null;
-    // update verification
+
+    // Reset OTP fields
+    user.otpPhone = null;
+    user.otpEmail = null;
+    user.otp_expiry_Phone = null;
+    user.otp_expiry_Email = null;
+
+    // Update verification status
     user.isVerified = true;
-    await user.save({validateBeforeSave: false});
-    res.status(200).json({ message: "OTP Verified Successfully" });
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      message: "Verification successful",
+    });
   } catch (error) {
-    console.log("Error in verifyOtp", error.message);
-    res.status(500).json({ message: error.message });
+    console.log("Error in verifyOtp:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
