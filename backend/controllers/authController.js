@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import resetAccessToken from "../lib/resetAccessToken.js";
 import sendSms from "../lib/sendSms.js";
 import sendEmail from "../lib/sendEmail.js";
-
+import { checkOtpResendEligibility, recordOtpSendAttempt } from "../lib/otpRateLimiter.js";
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -160,6 +160,23 @@ export const sendOtp = async (req, res) => {
       });
     }
 
+    // Check if user can resend OTPs (email)
+    const emailEligibility = await checkOtpResendEligibility(email, 'email');
+    if (!emailEligibility.canResend) {
+      return res.status(429).json({
+        success: false,
+        message: `Please wait ${emailEligibility.timeRemaining} seconds before requesting another email OTP`,
+      });
+    }
+
+    // Check if user can resend OTPs (phone)
+    const phoneEligibility = await checkOtpResendEligibility(email, 'phone');
+    if (!phoneEligibility.canResend) {
+      return res.status(429).json({
+        success: false,
+        message: `Please wait ${phoneEligibility.timeRemaining} seconds before requesting another SMS OTP`,
+      });
+    }
     // Generate OTPs
     const otpPhone = Math.floor(100000 + Math.random() * 900000).toString();
     const otpEmail = Math.floor(100000 + Math.random() * 900000).toString();
@@ -181,6 +198,8 @@ export const sendOtp = async (req, res) => {
     const smsResult = await sendSms(phone, otpPhone);
 
     if (smsResult.success && emailResult.success) {
+      await recordOtpSendAttempt(email, 'email');
+      await recordOtpSendAttempt(email, 'phone');
       return res.status(200).json({
         success: true,
         message: "Verification codes sent to your phone and email",
