@@ -5,6 +5,7 @@ import express from "express";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/coupons", couponRoutes);
 
 app.listen(PORT, () => {
   console.log(`Listening on PORT:${PORT}`);
