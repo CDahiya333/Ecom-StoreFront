@@ -1,5 +1,6 @@
 import Product from "../models/productModel.js";
 import redis from "../lib/redis.js";
+import cloudinary from "../lib/cloudinary.js"
 
 export const getAllProducts = async (req, res) => {
   try {
@@ -36,17 +37,34 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, category, isFeatured } = req.body;
-    // TODO: SETUP a AWS S3 BUCKET
+    const { name, description, price, category, isFeatured } = req.body;
+    let imageUrl = "";
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "products", 
+      });
+
+      imageUrl = result.secure_url;
+    } else if (req.body.image) {
+      // Check if an image URL or base64 string is provided in the body
+      const result = await cloudinary.uploader.upload(req.body.image, {
+        folder: "products",
+      });
+      imageUrl = result.secure_url;
+    } else {
+      return res.status(400).json({ message: "Image is required" });
+    }
 
     const product = await Product.create({
       name,
       description,
       price,
-      image,
+      image: imageUrl,
       category,
       isFeatured,
     });
+
     res.status(201).json(product);
   } catch (error) {
     console.log("Error in createProduct", error.message);

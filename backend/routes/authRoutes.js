@@ -1,6 +1,7 @@
 import express from "express";
-import { login, logout, signup, tokenRefresher,sendOtp, verifyOtp, resendOtp} from "../controllers/authController.js";
+import { login, logout, signup, tokenRefresher,sendOtp, verifyOtp, resendOtp, getProfile} from "../controllers/authController.js";
 import { authRateLimiter, otpRateLimiter } from "../lib/rateLimiter.js";
+import protectRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
@@ -11,5 +12,6 @@ router.post("/refresh-token", tokenRefresher);
 router.post("/sendotp", otpRateLimiter, sendOtp);
 router.post("/verifyotp", otpRateLimiter, verifyOtp);
 router.post("/resend-otp",  otpRateLimiter, resendOtp);
-// router.get("/getProfile", getProfile);
+router.get("/getProfile",protectRoute, getProfile);
+
 export default router;

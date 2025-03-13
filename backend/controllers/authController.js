@@ -12,7 +12,6 @@ import {
 } from "../lib/otpRateLimiter.js";
 import generateOtp from "../lib/generateOtp.js";
 
-
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -403,5 +402,14 @@ export const resendOtp = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    console.log("Error in getProfile", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
