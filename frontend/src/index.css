@@ -1,1 +1,20 @@
 @import "tailwindcss";
+/* src/index.css */
+
+/* Apply a default font family to the body if desired */
+body {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  /* Create custom classes for headings */
+  .heading-font {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+  }
+  
+  /* And for other text if needed */
+  .body-font {
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.3px;
+  }
+  
