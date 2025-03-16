@@ -52,9 +52,9 @@ const HomePage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-4xl sm:text-5xl font-bold text-center mb-12 pt-4 text-amber-900 heading-font"
+          className="text-4xl sm:text-5xl font-bold text-center mb-12 pt-4 text-amber-900  heading-font"
         >
-          Discover our exclusive collections
+          Discover our <span className="script-heading">Exclusive</span> collections
         </motion.h2>
         <motion.div
           initial="initial"

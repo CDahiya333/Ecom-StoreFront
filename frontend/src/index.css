@@ -18,3 +18,22 @@ body {
     letter-spacing: 0.3px;
   }
   
+  .script-heading {
+    font-family: "Luxurious Script", cursive;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 80px;
+  }
+  
+  .script-heading-regular {
+    font-family: "Luxurious Roman", serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+.bodoni-moda-font{
+    font-family: "Bodoni Moda", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: italic;
+  }
