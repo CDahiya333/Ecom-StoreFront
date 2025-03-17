@@ -13,8 +13,6 @@ const useProductStore = create((set) => ({
     try {
       // Determine if we're dealing with FormData or a regular object
       const isFormData = productData instanceof FormData;
-
-      // Add debug logging
       console.log(
         "Creating product with:",
         isFormData ? "FormData" : "JSON data"
@@ -57,10 +55,22 @@ const useProductStore = create((set) => ({
     }
   },
 
+  fetchProductByCategory: async (category) => {
+    set({ loading: true });
+    try {
+      const response = await axios.get(`/products/category/${category}`);
+      set({ products: response.data.products, loading: false });
+    } catch (error) {
+      set({ error: "Failed to fetch Products", loading: false });
+      toast.error(error.response?.data?.message || "Failed to Fetch Products");
+    }
+  },
+
   deleteProduct: async (id) => {
     set({ loading: true });
     try {
-      await axios.post(`/products/${id}`);
+      // Use DELETE method here
+      await axios.delete(`/products/${id}`);
       set((state) => ({
         products: state.products.filter((product) => product._id !== id),
         loading: false,

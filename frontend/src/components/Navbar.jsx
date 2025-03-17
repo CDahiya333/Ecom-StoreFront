@@ -2,41 +2,43 @@ import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import useUserStore from "../Stores/useUserStore.js";
 import { useEffect } from "react";
+import useCartStore from "../Stores/useCartStore.js";
 
 const Navbar = () => {
   const { user, logout } = useUserStore();
+  const { cart } = useCartStore();
   const isAdmin = user?.role === "admin";
 
   // Add smooth scroll effect when the page loads
   useEffect(() => {
     const handleScroll = () => {
-      const header = document.querySelector('header');
+      const header = document.querySelector("header");
       if (window.scrollY > 10) {
-        header.classList.add('scrolled');
+        header.classList.add("scrolled");
       } else {
-        header.classList.remove('scrolled');
+        header.classList.remove("scrolled");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header className="fixed top-0 left-0 w-full bg-zinc-900 bg-opacity-95 backdrop-blur-md z-40 transition-all duration-500 border-b border-amber-900">
       <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500&display=swap');
-        
+        @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500&display=swap");
+
         header.scrolled {
           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
-        
+
         .nav-link {
           position: relative;
         }
-        
+
         .nav-link::after {
-          content: '';
+          content: "";
           position: absolute;
           width: 0;
           height: 1px;
@@ -45,18 +47,18 @@ const Navbar = () => {
           background-color: #d4a574;
           transition: width 0.3s ease;
         }
-        
+
         .nav-link:hover::after {
           width: 100%;
         }
-        
+
         .logo-text {
-          font-family: 'Playfair Display', serif;
+          font-family: "Playfair Display", serif;
           letter-spacing: 1px;
         }
-        
+
         .nav-item {
-          font-family: 'Montserrat', sans-serif;
+          font-family: "Montserrat", sans-serif;
           letter-spacing: 0.5px;
           font-weight: 300;
         }
@@ -87,18 +89,23 @@ const Navbar = () => {
               Collections
             </Link>
             {user && (
-              <Link to="/cart" className="flex items-center gap-2 group transition-all duration-300">
+              <Link
+                to="/cart"
+                className="flex items-center gap-2 group transition-all duration-300"
+              >
                 <div className="relative">
                   <ShoppingCart
                     className="text-amber-100 group-hover:text-amber-300 transition-colors duration-300"
                     size={20}
                   />
                   {/* Cart Badge */}
-                  <span className="absolute -top-1 -right-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-amber-900 bg-amber-400 rounded-full shadow-md">
-                    3
+                  <span className="absolute -top-3 -right-3 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-amber-900 bg-amber-400 rounded-full shadow-md">
+                    {cart.length}
                   </span>
                 </div>
-                <span className="hidden sm:inline text-amber-100 group-hover:text-amber-300 transition-colors duration-300">Cart</span>
+                <span className="hidden sm:inline text-amber-100 group-hover:text-amber-300 transition-colors duration-300">
+                  Cart
+                </span>
               </Link>
             )}
             {isAdmin && (
@@ -111,8 +118,8 @@ const Navbar = () => {
               </Link>
             )}
             {user ? (
-              <button 
-                className="flex items-center bg-amber-900 hover:bg-amber-800 text-amber-100 px-5 py-2 rounded-none border border-amber-700 hover:border-amber-500 transition-all duration-300" 
+              <button
+                className="flex items-center bg-amber-900 hover:bg-amber-800 text-amber-100 px-5 py-2 rounded-none border border-amber-700 hover:border-amber-500 transition-all duration-300"
                 onClick={logout}
               >
                 <LogOut size={16} className="mr-2" />

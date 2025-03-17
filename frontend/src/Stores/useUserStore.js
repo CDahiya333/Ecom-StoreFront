@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import axios from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { TrustProductsEntityAssignmentsContextImpl } from "twilio/lib/rest/trusthub/v1/trustProducts/trustProductsEntityAssignments.js";
 
-const useUserStore = create((set) => ({
+const useUserStore = create((set, get) => ({
   user: null,
   loading: false,
   checkingAuth: true,
@@ -75,6 +76,49 @@ const useUserStore = create((set) => ({
       toast.error(error.response?.data?.message || "Logout failed");
     }
   },
+  refreshToken: async () => {
+    if (get().checkingAuth) return;
+
+    set({ checkAuth: true });
+    try {
+      const response = await axios.post("/auth/refresh-token");
+      set({ checkingAuth: false });
+      return response.data;
+    } catch (error) {
+      set({ user: null, checkAuth: false });
+      throw error;
+    }
+  },
 }));
-// TODO: Implement the axious interceptors for refershing the access token every 15min
+// TODO: Implement the axios interceptors for refershing the access token every 15min
+let refreshPromise = null;
+
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        // If a resh is already in progress
+        if (refreshPromise) {
+          await refreshPromise;
+          return axios(originalRequest);
+        }
+
+        // Start a new refresh
+        refreshPromise = useUserStore.getState().refreshToken();
+        await refreshPromise;
+        refreshPromise = null;
+
+        return axios(originalRequest);
+      } catch (refreshError) {
+        // refresh fails then logout
+        useUserStore.getState().logout();
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 export default useUserStore;
