@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import Navbar from "./components/Navbar.jsx";
+import ChatUI from "./components/ChatUI.jsx"
 import { Toaster } from "react-hot-toast";
 import useUserStore from "./Stores/useUserStore.js";
 import { useEffect } from "react";
@@ -23,6 +24,7 @@ function App() {
       {/* <div>Background Styling</div> */}
       <div>
         <Navbar />
+        <ChatUI/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route
