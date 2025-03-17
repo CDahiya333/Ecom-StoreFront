@@ -1,7 +1,7 @@
 import Product from "../models/productModel.js";
 import redis from "../lib/redis.js";
-import cloudinary from "../lib/cloudinary.js"
-
+import cloudinary from "../lib/cloudinary.js";
+import fs from "fs";
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({});
@@ -34,44 +34,87 @@ export const getFeaturedProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, isFeatured } = req.body;
+    console.log("Request body:", req.body);
+    console.log("Request file:", req.file);
+
+    const { name, description, price, category } = req.body;
+    const isFeatured =
+      req.body.isFeatured === "true" || req.body.isFeatured === true;
     let imageUrl = "";
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "products", 
-      });
+      // Log for debugging
+      console.log("File received:", req.file);
 
-      imageUrl = result.secure_url;
+      try {
+        // Use the absolute path to the file
+        const filePath = req.file.path;
+        console.log("File path:", filePath);
+
+        if (!fs.existsSync(filePath)) {
+          console.error("File does not exist at path:", filePath);
+          return res
+            .status(400)
+            .json({ message: "File not found at expected location" });
+        }
+
+        const result = await cloudinary.uploader.upload(filePath, {
+          folder: "products",
+        });
+
+        console.log("Cloudinary result:", result);
+        imageUrl = result.secure_url;
+
+        // Optional: Delete the file after upload to cloudinary
+        fs.unlink(filePath, (err) => {
+          if (err) console.log("Error deleting file:", err);
+        });
+      } catch (uploadErr) {
+        console.error("Cloudinary upload error:", uploadErr);
+        return res
+          .status(400)
+          .json({ message: "Image upload failed: " + uploadErr.message });
+      }
     } else if (req.body.image) {
-      // Check if an image URL or base64 string is provided in the body
-      const result = await cloudinary.uploader.upload(req.body.image, {
-        folder: "products",
-      });
-      imageUrl = result.secure_url;
+      // For image URL from the request body
+      try {
+        console.log("Using image URL:", req.body.image);
+        const result = await cloudinary.uploader.upload(req.body.image, {
+          folder: "products",
+        });
+        imageUrl = result.secure_url;
+      } catch (uploadErr) {
+        console.error("Cloudinary upload error:", uploadErr);
+        return res
+          .status(400)
+          .json({ message: "Image upload failed: " + uploadErr.message });
+      }
     } else {
       return res.status(400).json({ message: "Image is required" });
     }
 
-    const product = await Product.create({
+    console.log("Creating product with imageUrl:", imageUrl);
+
+    const productData = {
       name,
       description,
-      price,
+      price: Number(price),
       image: imageUrl,
       category,
-      isFeatured,
-    });
+      isFeatured: isFeatured || false,
+    };
 
+    console.log("Product data:", productData);
+
+    const product = await Product.create(productData);
     res.status(201).json(product);
   } catch (error) {
-    console.log("Error in createProduct", error.message);
+    console.error("Error in createProduct:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params.id;
@@ -114,7 +157,7 @@ export const getRecommendedProducts = async (req, res) => {
 };
 
 export const getProductsbyCategory = async (req, res) => {
-    const {Category}  =req.params.category;
+  const { Category } = req.params.category;
   try {
     const products = await Product.find({ Category });
     res.json({ products });
@@ -131,11 +174,11 @@ export const toggleFeaturedProducts = async (req, res) => {
 
     if (!product) {
       return res.status(404).json({ message: "Product Not Found" });
-    }else{
-        product.isFeatured = !product.isFeatured;
-        const updatedProduct = await Product.save();
-        await featuredProductsCache();
-        res.json(updatedProduct);
+    } else {
+      product.isFeatured = !product.isFeatured;
+      const updatedProduct = await Product.save();
+      await featuredProductsCache();
+      res.json(updatedProduct);
     }
   } catch (error) {
     console.log("Error in toggleFeaturedProducts", error.message);
@@ -144,11 +187,11 @@ export const toggleFeaturedProducts = async (req, res) => {
 };
 
 async function featuredProductsCache() {
-    try {
-        const featuredProducts = await Product.find({ isFeatured: true }).lean();
-        await redis.set("featuredProducts", JSON.stringify(featuredProducts));
-    } catch (error) {
-        console.log("Error in featuredProductsCache", error.message);
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    await redis.set("featuredProducts", JSON.stringify(featuredProducts));
+  } catch (error) {
+    console.log("Error in featuredProductsCache", error.message);
+    res.status(500).json({ message: error.message });
+  }
 }

@@ -31,7 +31,7 @@ const categories = [
     imageUrl: "/home-decor.webp",
   },
   {
-    href: "/category/Cutlery",
+    href: "/category/cutlery",
     name: "Cutlery & KitchenWae",
     imageUrl: "/Cutlery.png",
   },
@@ -54,7 +54,8 @@ const HomePage = () => {
           transition={{ duration: 1 }}
           className="text-4xl sm:text-5xl font-bold text-center mb-12 pt-4 text-amber-900  heading-font"
         >
-          Discover our <span className="script-heading">Exclusive</span> collections
+          Discover our <span className="script-heading">Exclusive</span>{" "}
+          collections
         </motion.h2>
         <motion.div
           initial="initial"
@@ -102,7 +103,9 @@ const HomePage = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-bold mb-4 heading-font">More Luxurious Selections</h2>
+          <h2 className="text-3xl font-bold mb-4 heading-font">
+            More Luxurious Selections
+          </h2>
           <p className="text-lg text-gray-700 body-font">
             Stay tuned for more exclusive designs and curated collections.
           </p>
