@@ -77,7 +77,7 @@ const ProductList = () => {
                   </td>
                   <td className="py-3 px-4">{product.name}</td>
                   <td className="py-3 px-4">{truncate(product.description)}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-xl">
                     {product.price ? `$${product.price}` : "N/A"}
                   </td>
                   <td className="py-3 px-4">
