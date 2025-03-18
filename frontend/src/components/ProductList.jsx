@@ -31,7 +31,9 @@ const ProductList = () => {
   // Helper to truncate long descriptions
   const truncate = (text, maxLength = 60) => {
     if (!text) return "";
-    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
   };
 
   return (
@@ -50,7 +52,6 @@ const ProductList = () => {
               <th className="py-3 px-4 font-semibold">Description</th>
               <th className="py-3 px-4 font-semibold">Price</th>
               <th className="py-3 px-4 font-semibold">Category</th>
-              <th className="py-3 px-4 font-semibold">Featured</th>
               <th className="py-3 px-4 font-semibold text-center">Actions</th>
             </tr>
           </thead>
@@ -82,13 +83,6 @@ const ProductList = () => {
                   <td className="py-3 px-4">
                     {product.category || "Uncategorized"}
                   </td>
-                  <td className="py-3 px-4">
-                    {product.isFeatured ? (
-                      <span className="text-amber-700 font-semibold">Yes</span>
-                    ) : (
-                      <span className="text-gray-600">No</span>
-                    )}
-                  </td>
                   <td className="py-3 px-4 text-center">
                     <div className="inline-flex space-x-2">
                       <motion.button
@@ -96,13 +90,21 @@ const ProductList = () => {
                         whileTap={{ scale: 0.95 }}
                         className={`px-3 py-2 rounded-md border transition-colors duration-200 ${
                           product.isFeatured
-                            ? "border-amber-700 text-amber-800 hover:bg-amber-50"
+                            ? "border-amber-700 bg-amber-100 text-amber-800"
                             : "border-gray-400 text-gray-600 hover:bg-gray-100"
                         }`}
                         onClick={() => handleToggleFeatured(product._id)}
-                        aria-label="Toggle Featured"
+                        aria-label={
+                          product.isFeatured
+                            ? "Remove from Featured"
+                            : "Add to Featured"
+                        }
+                        title={product.isFeatured ? "Featured" : "Not Featured"}
                       >
-                        <Star size={16} />
+                        <Star
+                          size={16}
+                          fill={product.isFeatured ? "currentColor" : "none"}
+                        />
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}

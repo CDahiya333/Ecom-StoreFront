@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import "../index.css";
+import useProductStore from "../Stores/useProductStore.js";
+import FeaturedProducts from "../components/FeaturedProducts.jsx";
 
 const categories = [
   {
@@ -44,6 +46,18 @@ const cardVariants = {
 };
 
 const HomePage = () => {
+  const { fetchFeaturedProducts, products, loading } = useProductStore();
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, [fetchFeaturedProducts]);
+
+  // Add this to debug
+  useEffect(() => {
+    console.log("Products in HomePage:", products);
+    console.log("Loading state:", loading);
+  }, [products, loading]);
+
   return (
     <div className="min-h-screen bg-amber-50 text-gray-800">
       {/* Category Section */}
@@ -104,11 +118,17 @@ const HomePage = () => {
           className="text-center"
         >
           <h2 className="text-3xl font-bold mb-4 heading-font">
-            More Luxurious Selections
+            Our <span className="script-heading font-size-[50px]">Luxurious</span> Selections
           </h2>
-          <p className="text-lg text-gray-700 body-font">
-            Stay tuned for more exclusive designs and curated collections.
-          </p>
+          {!loading && products && products.length > 0 ? (
+            <FeaturedProducts featuredProducts={products} />
+          ) : (
+            <p className="text-lg text-gray-700 body-font">
+              {loading
+                ? "Loading products..."
+                : "Stay tuned for more exclusive designs and curated collections."}
+            </p>
+          )}
         </motion.div>
       </section>
     </div>

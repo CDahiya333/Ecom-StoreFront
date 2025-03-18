@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import axios from "../lib/axios.js";
 import toast from "react-hot-toast";
-import { TrustProductsEntityAssignmentsContextImpl } from "twilio/lib/rest/trusthub/v1/trustProducts/trustProductsEntityAssignments.js";
 
 const useUserStore = create((set, get) => ({
   user: null,

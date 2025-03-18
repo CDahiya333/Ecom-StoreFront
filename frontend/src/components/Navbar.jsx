@@ -99,9 +99,11 @@ const Navbar = () => {
                     size={20}
                   />
                   {/* Cart Badge */}
-                  <span className="absolute -top-3 -right-3 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-amber-900 bg-amber-400 rounded-full shadow-md">
-                    {cart.length}
-                  </span>
+                  {cart.length > 0 && (
+                    <span className="absolute -top-3 -right-3 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-amber-900 bg-amber-400 rounded-full shadow-md">
+                      {cart.length}
+                    </span>
+                  )}
                 </div>
                 <span className="hidden sm:inline text-amber-100 group-hover:text-amber-300 transition-colors duration-300">
                   Cart

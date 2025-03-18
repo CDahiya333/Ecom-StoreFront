@@ -59,7 +59,14 @@ const useProductStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.get(`/products/category/${category}`);
-      set({ products: response.data.products, loading: false });
+      console.log(`API response for ${category}:`, response.data);
+
+      // Handle different response structures
+      const products =
+        response.data.products ||
+        (Array.isArray(response.data) ? response.data : []);
+
+      set({ products, loading: false });
     } catch (error) {
       set({ error: "Failed to fetch Products", loading: false });
       toast.error(error.response?.data?.message || "Failed to Fetch Products");
@@ -98,6 +105,20 @@ const useProductStore = create((set) => ({
     } catch (error) {
       set({ error: "Failed to update product", loading: false });
       toast.error(error.response?.data?.message || "Couldn't update product");
+    }
+  },
+  fetchFeaturedProducts: async () => {
+    set({ loading: true });
+    try {
+      const res = await axios.get("/products/featured");
+      // Extract the products array from the response
+      const productArray = res.data.products || [];
+      set({ products: productArray, loading: false });
+      console.log("Products array extracted:", productArray);
+    } catch (error) {
+      set({ error: "Failed to Fetch Products", loading: false });
+      console.log("Error fetching products:", error);
+      toast.error("Failed to Fetch Product");
     }
   },
 }));

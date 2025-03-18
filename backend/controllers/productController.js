@@ -11,16 +11,15 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 export const getFeaturedProducts = async (req, res) => {
   try {
-    // Caching this in Redis to increased performance
+    // Caching this in Redis to increase performance
     let featuredProducts = await redis.get("featuredProducts");
     if (featuredProducts) {
-      res.json({ products: JSON.parse(featuredProducts) });
+      return res.json({ products: JSON.parse(featuredProducts) }); // Return here to stop execution
     }
 
-    // If not present in Redis fetching from MongoDB
+    // If not present in Redis, fetching from MongoDB
     featuredProducts = await Product.find({ isFeatured: true }).lean();
 
     if (!featuredProducts) {
@@ -28,12 +27,13 @@ export const getFeaturedProducts = async (req, res) => {
     }
 
     await redis.set("featuredProducts", JSON.stringify(featuredProducts));
-    res.json({ products: featuredProducts });
+    return res.json({ products: featuredProducts });
   } catch (error) {
     console.log("Error in getFeaturedProducts", error.message);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
+
 export const createProduct = async (req, res) => {
   try {
     console.log("Request body:", req.body);
@@ -117,15 +117,24 @@ export const createProduct = async (req, res) => {
 };
 export const deleteProduct = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
     const product = await Product.findById(id);
     if (!product) {
-      return res.status(404).json({ message: "Product Not Found" });
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    // TODO: DELETE FROM AWS S3 BUCKET
+    if (product.image) {
+      const publicId = product.image.split("/").pop().split(".")[0];
+      try {
+        await cloudinary.uploader.destroy(`products/${publicId}`);
+        console.log("deleted image from cloudinary");
+      } catch (error) {
+        console.log("error deleting image from cloudinary", error);
+      }
+    }
 
-    await product.findByIdAndDelete(id);
+    // Fix: Use Product model to delete, not the product instance
+    await Product.findByIdAndDelete(id);
     res.status(200).json({ message: "Product Deleted Successfully" });
   } catch (error) {
     console.log("Error in deleteProduct", error.message);
@@ -176,7 +185,8 @@ export const toggleFeaturedProducts = async (req, res) => {
       return res.status(404).json({ message: "Product Not Found" });
     } else {
       product.isFeatured = !product.isFeatured;
-      const updatedProduct = await Product.save();
+      // Fix: Use the product instance to save, not the model
+      const updatedProduct = await product.save();
       await featuredProductsCache();
       res.json(updatedProduct);
     }

@@ -13,6 +13,6 @@ router.get("/category/:category", getProductsbyCategory);
 router.get("/recommended", getRecommendedProducts);
 router.post("/", protectRoute, adminRoute, upload.single("image"), createProduct);
 router.patch("/:id",protectRoute,adminRoute, toggleFeaturedProducts);
-router.post("/:id",protectRoute,adminRoute, deleteProduct);
+router.delete("/:id",protectRoute,adminRoute, deleteProduct);
 
 export default router;
