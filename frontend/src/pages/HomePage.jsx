@@ -5,37 +5,38 @@ import { motion } from "framer-motion";
 import "../index.css";
 import useProductStore from "../Stores/useProductStore.js";
 import FeaturedProducts from "../components/FeaturedProducts.jsx";
+import Footer from "../components/Footer.jsx";
 
 const categories = [
   {
     href: "/category/living-room-furniture",
     name: "Living Room Furniture",
-    imageUrl: "/living.jpg",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/o29eemecxq8p4tvye2zf.jpg",
   },
   {
     href: "/category/bedroom-furniture",
     name: "Bedroom Furniture",
-    imageUrl: "/bedroom.jpg",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742231446/products/p2b8f0mhmuxatncspoti.webp",
   },
   {
     href: "/category/dining-office-furniture",
     name: "Dining & Office Furniture",
-    imageUrl: "/dining.jpg",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742311505/products/t0qkqpvu4q487e9npnqn.jpg",
   },
   {
     href: "/category/candles",
     name: "Candles",
-    imageUrl: "/candles.webp",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309552/products/lfifsbuzxiwjehrlewcf.webp",
   },
   {
     href: "/category/decor-accessories",
     name: "Decor & Accessories",
-    imageUrl: "/home-decor.webp",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742310156/products/oim5kmbjhtnljtrmdag4.jpg",
   },
   {
     href: "/category/cutlery",
     name: "Cutlery & KitchenWae",
-    imageUrl: "/Cutlery.png",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742227568/products/yll2j6ocaflvnwu3cs7k.webp",
   },
 ];
 
@@ -92,16 +93,15 @@ const HomePage = () => {
                     className="w-full h-full object-cover transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-amber-900 via-transparent to-transparent opacity-40"></div>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-0 left-0 right-0 p-4"
-                  >
-                    <h3 className="text-2xl font-semibold text-white drop-shadow-lg">
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <motion.h3 
+                      whileHover={{ scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-2xl font-semibold text-white drop-shadow-lg"
+                    >
                       {category.name}
-                    </h3>
-                  </motion.div>
+                    </motion.h3>
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -131,6 +131,9 @@ const HomePage = () => {
           )}
         </motion.div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
