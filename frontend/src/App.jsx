@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import useCartStore from "./Stores/useCartStore.js";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems, syncCart } = useCartStore();
@@ -37,20 +38,25 @@ function App() {
       <div>
         <Navbar />
         <ChatUI />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/signup"
-            element={user ? <HomePage /> : <SignUpPage />}
-          />
-          <Route path="/login" element={user ? <HomePage /> : <LoginPage />} />
-          <Route
-            path="/dashboard"
-            element={user?.role === "admin" ? <AdminPage /> : <HomePage />}
-          />
-          <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/cart" element={user ? <CartPage /> : <LoginPage />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/signup"
+              element={user ? <HomePage /> : <SignUpPage />}
+            />
+            <Route
+              path="/login"
+              element={user ? <HomePage /> : <LoginPage />}
+            />
+            <Route
+              path="/dashboard"
+              element={user?.role === "admin" ? <AdminPage /> : <HomePage />}
+            />
+            <Route path="/category/:category" element={<CategoryPage />} />
+            <Route path="/cart" element={user ? <CartPage /> : <LoginPage />} />
+          </Routes>
+        </ErrorBoundary>
       </div>
       <Toaster />
     </div>

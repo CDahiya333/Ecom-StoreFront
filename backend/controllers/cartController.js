@@ -103,36 +103,6 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const deleteFromCart = async (req, res) => {
-  try {
-    const { productId } = req.body;
-    const user = req.user;
-
-    if (!productId) {
-      user.cartItems = [];
-    } else {
-      user.cartItems = user.cartItems.filter((item) => {
-        const itemId = item.productId
-          ? item.productId.toString()
-          : item.toString();
-        return itemId !== productId;
-      });
-    }
-
-    await user.save();
-
-    // Return full cart details instead of just cart items array
-    const updatedUser = await user.constructor.findById(user._id);
-    const cartController = await getCart(
-      { user: updatedUser },
-      { json: (data) => data }
-    );
-    res.json(cartController);
-  } catch (error) {
-    console.log("Error in deleteFromCart", error.message);
-    res.status(500).json({ message: error.message });
-  }
-};
 
 export const updateQuantity = async (req, res) => {
   try {
@@ -216,5 +186,36 @@ export const updateQuantity = async (req, res) => {
   } catch (error) {
     console.log("Error in updateQuantity", error.message);
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteFromCart = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const user = req.user;
+
+    if (!productId) {
+      user.cartItems = [];
+    } else {
+      user.cartItems = user.cartItems.filter((item) => {
+        const itemId = item.productId
+          ? item.productId.toString()
+          : item.toString();
+        return itemId !== productId;
+      });
+    }
+
+    await user.save();
+
+    // Return full cart details instead of just cart items array
+    const updatedUser = await user.constructor.findById(user._id);
+    const cartController = await getCart(
+      { user: updatedUser },
+      { json: (data) => data }
+    );
+    res.json(cartController);
+  } catch (error) {
+    console.log("Error in deleteFromCart", error.message);
+    res.status(500).json({ message: error.message });
   }
 };

@@ -12,6 +12,16 @@ export const getCoupon = async (req, res) => {
   }
 };
 
+/**
+ * Validate a coupon code given in the request body.
+ * @param {String} req.body.code - The coupon code to be validated.
+ * @return {Object} - The response object with the status code and the message.
+ * If the coupon is valid and active, the response will have a 200 status code
+ * and contain the coupon code, discount percentage, and a success message.
+ * If the coupon is invalid or inactive, the response will have a 404 status code
+ * and contain an appropriate error message.
+ */
+// TODO: Implement Coupon Deactivation after successful Purchase
 export const validateCoupon = async (req, res) => {
   try {
     const { code } = req.body;
