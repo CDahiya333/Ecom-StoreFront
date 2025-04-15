@@ -13,6 +13,7 @@ import LoadingSpinner from "./components/LoadingSpinner.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import useCartStore from "./Stores/useCartStore.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import PurchaseSuccessPage from "./pages/PurchaseSuccessPage.jsx";
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
@@ -54,6 +55,10 @@ function App() {
             />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/cart" element={user ? <CartPage /> : <LoginPage />} />
+            <Route
+              path="/purchase-success"
+              element={user ? <PurchaseSuccessPage /> : <LoginPage />}
+            />
           </Routes>
         </ErrorBoundary>
       </div>

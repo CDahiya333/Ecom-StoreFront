@@ -5,13 +5,16 @@ import stripe from "../lib/stripe.js";
 export const createCheckoutSession = async (req, res) => {
   try {
     const { products, couponCode } = req.body;
+    const userObjectId = req.user._id;
+    const userStringId = req.user._id.toString();
     if (!Array.isArray(products) || products.length === 0) {
+      console.log("Stuck Here");
       return res.status(400).json({ json: "Invalid or Empty Array" });
     }
     let totalAmount = 0;
     const lineItems = products.map((product) => {
       const amount = Math.round(product.price * 100);
-      totalAmount += amount * product.quantity;
+      totalAmount += amount * (product.quantity || 1);
 
       return {
         price_data: {
@@ -22,6 +25,7 @@ export const createCheckoutSession = async (req, res) => {
           },
           unit_amount: amount,
         },
+        quantity: product.quantity || 1,
       };
     });
 
@@ -29,7 +33,7 @@ export const createCheckoutSession = async (req, res) => {
     if (couponCode) {
       coupon = await Coupon.findOne({
         code: couponCode,
-        userId: req.user._id,
+        userId: userObjectId,
         isActive: true,
       });
       if (coupon) {
@@ -45,14 +49,14 @@ export const createCheckoutSession = async (req, res) => {
 
     // Creating stripe session to log payment
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "upi", "paypal"],
+      payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
-      discount: discounts,
+      discounts: coupon || discounts,
       metadata: {
-        userId: req.user_id.toString(),
+        userId: userStringId,
         couponCode: couponCode || "",
         products: JSON.stringify(
           products.map((p) => ({
