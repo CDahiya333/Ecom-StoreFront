@@ -36,7 +36,9 @@ const CartItemCard = ({ item }) => {
       />
       <div className="flex-1">
         <h3 className="text-xl font-semibold">{item.name}</h3>
-        <p className="text-gray-600">${item.price}</p>
+        <p className="text-gray-600">
+          ${(item.price * item.quantity).toFixed(2)}
+        </p>
         <div className="mt-2 flex items-center space-x-2">
           <motion.button
             onClick={() => handleQuantityChange(item._id, item.quantity - 1)}

@@ -1,5 +1,17 @@
 import Product from "../models/productModel.js";
-
+import User from "../models/userModel.js";
+/**
+ * Get the cart items for the current user.
+ *
+ * Returns an array of product objects with an additional `quantity` field
+ * representing the quantity of each item in the user's cart.
+ *
+ * If the user has no cart items, returns an empty array.
+ *
+ * @param {import("express").Request} req - The Express HTTP request.
+ * @param {import("express").Response} res - The Express HTTP response.
+ * @returns {Promise<Product[]>} The list of cart items.
+ */
 export const getCart = async (req, res) => {
   try {
     const user = req.user;
@@ -98,63 +110,35 @@ export const updateQuantity = async (req, res) => {
       return res.status(404).json({ message: "Cart not found" });
     }
 
-    // Find the item index using a more reliable comparison
-    const existingItemIndex = user.cartItems.findIndex((item) => {
-      const itemId = item.productId
-        ? item.productId.toString()
-        : item.toString();
-      return itemId === productId;
-    });
+    const existingItemIndex = user.cartItems.findIndex(
+      (item) => item._id.toString() === productId
+    );
 
     console.log(`Item found at index: ${existingItemIndex}`);
 
     if (existingItemIndex >= 0) {
       if (quantity <= 0) {
-        // Remove item if quantity is zero or negative
         console.log(`Removing item from cart: ${productId}`);
-        user.cartItems = user.cartItems.filter((item) => {
-          const itemId = item.productId
-            ? item.productId.toString()
-            : item.toString();
-          return itemId !== productId;
-        });
+        user.cartItems = user.cartItems.filter(
+          (item) => item._id.toString() !== productId
+        );
       } else {
-        // Update quantity
         console.log(`Setting quantity to: ${quantity}`);
-        if (
-          typeof user.cartItems[existingItemIndex] === "object" &&
-          user.cartItems[existingItemIndex] !== null
-        ) {
-          user.cartItems[existingItemIndex].quantity = quantity;
-        } else {
-          // Convert primitive ID to object
-          user.cartItems[existingItemIndex] = {
-            productId: user.cartItems[existingItemIndex],
-            quantity: quantity,
-          };
-        }
+        user.cartItems[existingItemIndex].quantity = quantity;
       }
 
-      // Save user and return complete cart
       await user.save();
 
-      // Use Product.find to get fresh product data
-      const productIds = user.cartItems.map((item) =>
-        item.productId ? item.productId : item
-      );
-
+      const updatedUser = await User.findById(user._id);
+      const productIds = updatedUser.cartItems.map((item) => item._id);
       const products = await Product.find({ _id: { $in: productIds } });
 
-      // Map products with quantities
+      // Build final cart items array
       const cartItems = products.map((product) => {
-        const cartItem = user.cartItems.find((item) => {
-          const itemId = item.productId
-            ? item.productId.toString()
-            : item.toString();
-          return itemId === product._id.toString();
-        });
-
-        const quantity = cartItem && cartItem.quantity ? cartItem.quantity : 1;
+        const cartItem = updatedUser.cartItems.find(
+          (item) => item._id.toString() === product._id.toString()
+        );
+        const quantity = cartItem?.quantity || 1;
         return {
           ...product.toObject(),
           quantity,
@@ -166,7 +150,7 @@ export const updateQuantity = async (req, res) => {
       return res.status(404).json({ message: "Product not found in cart" });
     }
   } catch (error) {
-    console.log("Error in updateQuantity", error.message);
+    console.log("Error in updateQuantity:", error.message);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -176,20 +160,19 @@ export const deleteFromCart = async (req, res) => {
     const { productId } = req.body;
     const user = req.user;
 
+    console.log("Delete request received for productId:", productId);
+
     if (!productId) {
       user.cartItems = [];
     } else {
       user.cartItems = user.cartItems.filter((item) => {
-        const itemId = item.productId
-          ? item.productId.toString()
-          : item.toString();
+        const itemId = item._id ? item._id.toString() : null;
         return itemId !== productId;
       });
     }
-
+    console.log("Cart after deletion:", user.cartItems);
     await user.save();
 
-    // Return full cart details instead of just cart items array
     const updatedUser = await user.constructor.findById(user._id);
     const cartController = await getCart(
       { user: updatedUser },

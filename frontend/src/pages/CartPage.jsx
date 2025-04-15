@@ -30,6 +30,10 @@ const CartPage = () => {
     }
   }, [getCartItems, user]);
 
+  // useEffect(() => {
+  //   console.log("Cart updated in UI:", cart);
+  // }, [cart]);
+
   const handleApplyCoupon = (e) => {
     e.preventDefault();
     if (couponCode.trim()) {

@@ -15,7 +15,7 @@ import useCartStore from "./Stores/useCartStore.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
-  const { getCartItems, syncCart } = useCartStore();
+  const { getCartItems } = useCartStore();
 
   useEffect(() => {
     checkAuth();
@@ -24,9 +24,9 @@ function App() {
   useEffect(() => {
     if (user) {
       // Sync cart when user logs in
-      syncCart().catch(console.error);
+      getCartItems().catch(console.error);
     }
-  }, [user, syncCart]);
+  }, [user, getCartItems]);
 
   if (checkingAuth) {
     return <LoadingSpinner />;
