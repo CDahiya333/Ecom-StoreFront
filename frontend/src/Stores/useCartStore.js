@@ -30,7 +30,9 @@ const useCartStore = create(
           get().calculateTotals();
           toast.success("Coupon applied successfully");
         } catch (error) {
-          toast.error(error.response?.data?.message || "Failed to apply coupon");
+          toast.error(
+            error.response?.data?.message || "Failed to apply coupon"
+          );
         }
       },
 
@@ -55,7 +57,9 @@ const useCartStore = create(
         } catch (error) {
           console.error("Error getting cart items:", error);
           set({ cart: [], isLoading: false });
-          toast.error(error.response?.data?.message || "Failed to load cart items");
+          toast.error(
+            error.response?.data?.message || "Failed to load cart items"
+          );
         }
       },
 
@@ -70,56 +74,42 @@ const useCartStore = create(
         }
       },
 
+      // BACKEND expects and returns in Array format consisting object { _id: String, quantity: Number }
       addToCart: async (product) => {
         try {
           console.log(`Adding product to cart: ${product._id}`);
-          const response = await axios.post("/cart", { productId: product._id });
+          const response = await axios.post("/cart", {
+            productId: product._id,
+          });
 
-          // Update cart with the new cart data from server
           if (Array.isArray(response.data)) {
             set({ cart: response.data });
             get().calculateTotals();
-          } else if (response.data && typeof response.data === 'object') {
-            // Handle single item response
-            set((state) => {
-              const existingItem = state.cart.find(item => item._id === product._id);
-              if (existingItem) {
-                return {
-                  cart: state.cart.map(item =>
-                    item._id === product._id
-                      ? { ...item, quantity: item.quantity + 1 }
-                      : item
-                  )
-                };
-              }
-              return {
-                cart: [...state.cart, { ...product, quantity: 1 }]
-              };
-            });
-            get().calculateTotals();
           } else {
-            throw new Error('Invalid server response format');
+            throw new Error("Invalid server response format");
           }
-
-          toast.success("Product added to cart");
+          toast.success("Added to cart");
         } catch (error) {
-          console.error("Error adding to cart:", error);
-          // Attempt local fallback
+          console.error("Couldn't add to cart:", error);
+
+          // Local Optimistic update
           set((state) => {
-            const existingItem = state.cart.find(item => item._id === product._id);
+            const existingItem = state.cart.find(
+              (item) => item._id === product._id
+            );
             const newCart = existingItem
-              ? state.cart.map(item =>
+              ? state.cart.map((item) =>
                   item._id === product._id
                     ? { ...item, quantity: item.quantity + 1 }
                     : item
                 )
-              : [...state.cart, { ...product, quantity: 1 }];
+              : [...state.cart, { ...product, _id: product._id, quantity: 1 }];
             return { cart: newCart };
           });
           get().calculateTotals();
-          
+
           toast.error(
-            error.response?.data?.message || "Added to cart locally (offline mode)"
+            error.response?.data?.message || "Added to Cart(optimistic)"
           );
         }
       },
@@ -200,9 +190,9 @@ const useCartStore = create(
           if (localCart.length > 0) {
             // Sync each item in the local cart with the server
             for (const item of localCart) {
-              await axios.post("/cart", { 
+              await axios.post("/cart", {
                 productId: item._id,
-                quantity: item.quantity 
+                quantity: item.quantity,
               });
             }
             // After syncing, fetch the latest cart state from server
@@ -212,10 +202,10 @@ const useCartStore = create(
           console.error("Error syncing cart:", error);
           toast.error("Failed to sync cart with server");
         }
-      }
+      },
     }),
     {
-      name: 'cart-storage',
+      name: "cart-storage",
       getStorage: () => localStorage,
     }
   )

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-// eslint-disable-next-line
-import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
 import useCartStore from "../Stores/useCartStore.js";
 import CartItemCard from "../components/CartItemCard.jsx";
 import useUserStore from "../Stores/useUserStore.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import EmptyCartUI from "../components/EmptyCartUI.jsx";
+import RecommendedProducts from "../components/RecommendedProducts.jsx";
 
 const CartPage = () => {
   const {

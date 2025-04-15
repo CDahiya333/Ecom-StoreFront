@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       trim: true,
-      minlength: [6, "Password must be at least 6 characters long"]
+      minlength: [6, "Password must be at least 6 characters long"],
     },
     cartItems: [
       {
@@ -45,17 +45,16 @@ const userSchema = new mongoose.Schema(
     otp_expiry_Email: Date,
     isVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   { timestamps: true }
 );
 
-
 // Pre-procesor functions for Password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  
+
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -72,7 +71,7 @@ userSchema.methods.comparePassword = async function (password) {
     console.log("Error in comparePassword");
     throw error;
   }
-}
+};
 
 const User = mongoose.model("User", userSchema);
 export default User;

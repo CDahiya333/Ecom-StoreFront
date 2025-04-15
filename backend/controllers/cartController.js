@@ -8,32 +8,18 @@ export const getCart = async (req, res) => {
     }
 
     console.log("Cart items in user document:", JSON.stringify(user.cartItems));
-
-    // Extract product IDs
-    const productIds = user.cartItems.map((item) => {
-      return item.productId ? item.productId : item;
-    });
-
+    const productIds = user.cartItems.map((item) => item._id);
     console.log("Product IDs to fetch:", productIds);
 
     const products = await Product.find({ _id: { $in: productIds } });
     console.log("Products found:", products.length);
 
-    // Map products with quantities
     const cartItems = products.map((product) => {
-      // Find matching cart item
-      const cartItem = user.cartItems.find((item) => {
-        const itemId = item.productId
-          ? item.productId.toString()
-          : item.toString();
+      const cartItem = user.cartItems.find(
+        (item) => item._id.toString() === product._id.toString()
+      );
+      const quantity = cartItem?.quantity ?? 1;
 
-        return itemId === product._id.toString();
-      });
-
-      // Get quantity
-      const quantity = cartItem && cartItem.quantity ? cartItem.quantity : 1;
-
-      // Create a new object with product data and quantity
       return {
         ...product.toObject(),
         quantity,
@@ -41,65 +27,61 @@ export const getCart = async (req, res) => {
     });
 
     console.log("Returning cart items:", cartItems.length);
-    res.json(cartItems);
+    if (res && typeof res.json === "function") {
+      return res.json(cartItems);
+    }
+    return cartItems;
   } catch (error) {
     console.error("Error in getCart:", error);
-    res.status(500).json({ message: error.message });
+    if (res && typeof res.status === "function") {
+      return res.status(500).json({ message: error.message });
+    }
+    throw error;
   }
 };
+
+/**
+ * @param {Object} req - The request object containing the productId in the body
+ * and the user object.
+ * @param {Object} res - The response object used to return the updated cart.
+ *
+ * The user's cartItems array is ensured to be an array of objects with each
+ * object containing an _id and quantity field. The function checks if the
+ * product already exists in the cart and updates the quantity accordingly.
+ */
+
 export const addToCart = async (req, res) => {
   try {
     const { productId } = req.body;
     const user = req.user;
 
-    // Make sure user has cartItems array
-    if (!user.cartItems) {
+    if (!Array.isArray(user.cartItems)) {
       user.cartItems = [];
     }
 
-    // The issue is here - we need to be more careful when accessing item.productId
     const existingItemIndex = user.cartItems.findIndex((item) => {
-      if (item && item.productId) {
-        return item.productId.toString() === productId;
-      }
-      if (item) {
-        return item.toString() === productId;
-      }
-      return false;
+      return item && item._id && item._id.toString() === productId;
     });
 
     if (existingItemIndex >= 0) {
-      // If item exists and has quantity property, increment it
-      if (user.cartItems[existingItemIndex].quantity) {
-        user.cartItems[existingItemIndex].quantity += 1;
-      }
-      // If it's just an ID, replace with object having quantity
-      else {
-        const oldId = user.cartItems[existingItemIndex];
-        user.cartItems[existingItemIndex] = {
-          productId: typeof oldId === "object" ? oldId.productId : oldId,
-          quantity: 2, // 1 existing + 1 new
-        };
-      }
+      user.cartItems[existingItemIndex].quantity += 1;
     } else {
-      // Add new item with quantity
       user.cartItems.push({
-        productId,
+        _id: productId,
         quantity: 1,
       });
     }
 
     await user.save();
-
-    // Return full cart details instead of just cart items
     const updatedUser = await user.constructor.findById(user._id);
     const cartController = await getCart(
       { user: updatedUser },
       { json: (data) => data }
     );
+
     res.json(cartController);
   } catch (error) {
-    console.log("Error in addToCart", error.message);
+    console.error("Error in addToCart", error.message);
     res.status(500).json({ message: error.message });
   }
 };
