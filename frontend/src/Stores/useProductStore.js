@@ -54,7 +54,18 @@ const useProductStore = create((set) => ({
       toast.error(error.response?.data?.message || "Couldn't fetch products");
     }
   },
-
+  fetchRecommendations: async () => {
+    set({ loading: true });
+    try {
+      console.log("fetching recommendations");
+      const res = await axios.get("/products/get-recommendations");
+      console.log("received response:", res);
+      set({ products: res.data.products, loading: false });
+    } catch (error) {
+      set({ error: "Failed to Fetch Products", loading: false });
+      toast.error("Error in Recommendations:", error);
+    }
+  },
   fetchProductByCategory: async (category) => {
     set({ loading: true });
     try {

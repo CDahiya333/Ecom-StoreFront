@@ -149,6 +149,8 @@ export const getRecommendedProducts = async (req, res) => {
         $sample: {
           size: 3,
         },
+      },
+      {
         $project: {
           _id: 1,
           name: 1,
@@ -158,6 +160,7 @@ export const getRecommendedProducts = async (req, res) => {
         },
       },
     ]);
+    console.log(products);
     res.json({ products });
   } catch (error) {
     console.log("Error in getRecommendedProducts", error.message);

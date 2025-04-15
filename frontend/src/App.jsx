@@ -23,7 +23,6 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      // Sync cart when user logs in
       getCartItems().catch(console.error);
     }
   }, [user, getCartItems]);
