@@ -7,6 +7,7 @@ import useProductStore from "../Stores/useProductStore.js";
 import FeaturedProducts from "../components/FeaturedProducts.jsx";
 import Footer from "../components/Footer.jsx";
 
+// Categories data from Cloudinary
 const categories = [
   {
     href: "/category/living-room-furniture",

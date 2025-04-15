@@ -14,16 +14,18 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import useCartStore from "./Stores/useCartStore.js";
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
-  const { getCartItems } = useCartStore();
+  const { getCartItems, syncCart } = useCartStore();
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   useEffect(() => {
     if (user) {
-      getCartItems();
+      // Sync cart when user logs in
+      syncCart().catch(console.error);
     }
-  }, [getCartItems, user]);
+  }, [user, syncCart]);
 
   if (checkingAuth) {
     return <LoadingSpinner />;
@@ -44,7 +46,7 @@ function App() {
           <Route path="/login" element={user ? <HomePage /> : <LoginPage />} />
           <Route
             path="/dashboard"
-            element={user?.role === "admin" ? <AdminPage /> : <LoginPage />}
+            element={user?.role === "admin" ? <AdminPage /> : <HomePage />}
           />
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/cart" element={user ? <CartPage /> : <LoginPage />} />

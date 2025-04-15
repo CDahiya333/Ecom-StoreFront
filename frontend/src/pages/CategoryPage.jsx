@@ -33,7 +33,7 @@ const CategoryPage = () => {
           <p className="text-center text-gray-700">Loading products...</p>
         ) : products.length === 0 ? (
           <p className="text-center text-gray-700">
-            No products found in this category.
+            More Products Coming Soon...
           </p>
         ) : (
           <motion.div
