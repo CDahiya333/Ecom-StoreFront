@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
             transition={{ duration: 0.5 }}
           />
 {/* Description */}
-          <p className="text-sm text-gray-600 text-center line-clamp-3 mb-4">
+          <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
             {product.description}
           </p>
         {/* </Link> */}
