@@ -380,15 +380,15 @@ const HomePage = () => {
       </section>
 
       {/* Subscribe Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-amber-50">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:border-amber-200 flex flex-col lg:flex-row"
+          className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:border-amber-200 flex flex-col lg:flex-row md:h-[500px]"
         >
           {/* Email Input Section - Left Half */}
-          <div className="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
+          <div className="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center ">
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
               Subscribe to our Newsletter
             </h3>
@@ -412,7 +412,7 @@ const HomePage = () => {
 
           {/* Image Section - Right Half */}
           <motion.div 
-            className="lg:w-1/2 h-[300px] sm:h-[400px] lg:h-[600px] bg-gray-50"
+            className="hidden md:block lg:w-1/2 h-[300px] sm:h-[400px] lg:h-[600px] bg-gray-50 relative overflow-hidden"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
