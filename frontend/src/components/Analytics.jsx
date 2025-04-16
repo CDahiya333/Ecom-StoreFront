@@ -22,7 +22,6 @@ const cardVariants = {
 };
 
 const Analytics = () => {
-  // Initialize with default values to prevent "undefined" errors
   const [analyticsData, setAnalyticsData] = useState({
     users: 0,
     products: 0,
@@ -46,9 +45,7 @@ const Analytics = () => {
           setError("Received unexpected data format from the server");
         }
 
-        // Process graph data if it exists
         if (response.data && Array.isArray(response.data.graphChart)) {
-          // Transform backend data format to match the chart requirements
           const formattedData = response.data.graphChart.map((item) => ({
             name: new Date(item.date).toLocaleDateString("en-US", {
               month: "short",
@@ -92,7 +89,7 @@ const Analytics = () => {
   }
 
   return (
-    <div className="min-h-screen bg-amber-50 text-gray-800 px-4 sm:px-6 lg:px-8 py-8">
+    <div className="vh-screen bg-amber-50 text-gray-800 px-4 sm:px-6 lg:px-8 py-8">
       {/* Analytics Data Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <AnalyticsCard
