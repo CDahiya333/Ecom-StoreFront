@@ -1,5 +1,7 @@
-import { get } from "mongoose";
 import User from "../models/userModel.js";
+import Product from "../models/productModel.js";
+import Order from "../models/orderModel.js";
+import getDatesInRange from "../lib/getDatesInRange.js";
 
 export const getAnalytics = async (req, res) => {
   try {
