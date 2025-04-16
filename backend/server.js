@@ -23,9 +23,9 @@ app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.send("Server is Running");
-});
+// app.get("/", (req, res) => {
+//   res.send("Server is Running");
+// });
 
 // Routes
 app.use("/api/auth", authRoutes);
