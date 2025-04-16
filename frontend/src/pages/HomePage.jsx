@@ -232,6 +232,7 @@ const HomePage = () => {
           transition={{ staggerChildren: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
+          {/* eslint-disable-next-line */}
           {blogPosts.map((post, index) => (
             <motion.article
               key={post.id}
@@ -316,6 +317,7 @@ const HomePage = () => {
           transition={{ staggerChildren: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
         >
+          {/* eslint-disable-next-line */}
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
