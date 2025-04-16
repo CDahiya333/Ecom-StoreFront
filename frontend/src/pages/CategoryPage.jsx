@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import useProductStore from "../Stores/useProductStore.js";
 import ProductCard from "../components/productCard.jsx";
-import { Delete } from "lucide-react";
+import { Delete, Utensils } from "lucide-react";
 
 const materialsList = ["Cotton", "Leather", "Wood", "Silk", "Metal"];
 
@@ -73,9 +73,12 @@ const CategoryPage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-4xl mt-10 sm:text-5xl font-bold text-center mb-8 script-heading-regular text-amber-900"
+          className="text-4xl mt-10 sm:text-5xl flex justify-center items-center sm:mt-18 md:mt-18 lg:mt-4 font-bold text-center mb-8 script-heading-regular text-amber-900"
         >
-          {formattedCategory}
+          <div>{formattedCategory}</div>
+          <div>
+            <Utensils className="w-12 h-12 text-amber-900 ml-2" />
+          </div>
         </motion.h1>
 
         {/* Animated Filter Section */}
@@ -83,7 +86,7 @@ const CategoryPage = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="bg-white rounded-full justify-center shadow-lg p-6 mb-10 flex flex-col md:flex-row md:items-center gap-4"
+          className="bg-white w-full rounded-sm md:rounded-full shadow-lg p-6 mb-10 flex flex-col items-center md:flex-row md:justify-center md:items-center gap-4"
         >
           {/* Price Filter + Clear */}
           <motion.div
