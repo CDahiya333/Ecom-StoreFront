@@ -42,6 +42,62 @@ const categories = [
   },
 ];
 
+// Hard-coded  Blog posts data will ad native blog support later
+const blogPosts = [
+  {
+    id: 1,
+    title: "The Art of Interior Styling",
+    excerpt: "Discover how to transform your space with our expert interior styling tips and tricks.",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/o29eemecxq8p4tvye2zf.jpg",
+    category: "Interior Design",
+    date: "April 15, 2024"
+  },
+  {
+    id: 2,
+    title: "Sustainable Living: Eco-Friendly Furniture",
+    excerpt: "Learn about sustainable materials and environmentally conscious furniture choices for your home.",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742231446/products/p2b8f0mhmuxatncspoti.webp",
+    category: "Sustainability",
+    date: "April 12, 2024"
+  },
+  {
+    id: 3,
+    title: "Candlelight Magic: Setting the Mood",
+    excerpt: "Create the perfect ambiance with our guide to using candles throughout your home.",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309552/products/lfifsbuzxiwjehrlewcf.webp",
+    category: "Lifestyle",
+    date: "April 10, 2024"
+  }
+];
+
+// Hard-coded testimonials data
+const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    role: "Interior Designer",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1744819165/products/wokvydjxx8nbnoqdrv2q.webp",
+    quote: "The quality of furniture and decor pieces is exceptional. Each item tells a story of craftsmanship and attention to detail.",
+    rating: 5
+  },
+  {
+    id: 2,
+    name: "Michael Chen",
+    role: "Home Stylist",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309552/products/lfifsbuzxiwjehrlewcf.webp",
+    quote: "I've been consistently impressed by the unique selection and the outstanding customer service. A true gem for interior enthusiasts.",
+    rating: 5
+  },
+  {
+    id: 3,
+    name: "Emma Davis",
+    role: "Architect",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742311505/products/t0qkqpvu4q487e9npnqn.jpg",
+    quote: "Their curated collection has transformed how I approach residential projects. The quality speaks for itself.",
+    rating: 5
+  }
+];
+
 const cardVariants = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -154,8 +210,173 @@ const HomePage = () => {
       </section>
 
       {/* Blog Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        {/* Blog Section Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl sm:text-5xl script-heading-regular mb-4">
+            Latest from our <span className="script-heading">Blog</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Discover inspiration, tips, and stories about modern living and interior design
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial="initial"
+          animate="animate"
+          transition={{ staggerChildren: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {blogPosts.map((post, index) => (
+            <motion.article
+              key={post.id}
+              variants={cardVariants}
+              whileHover={{ y: -10 }}
+              className="bg-white rounded-xl shadow-xl overflow-hidden border border-transparent hover:border-amber-200 transition-all flex flex-col h-full"
+            >
+              <motion.div
+                className="h-48 overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+
+              <div className="p-6 flex flex-col flex-grow">
+                <div className="flex items-center mb-4">
+                  <span className="text-sm text-amber-600 font-semibold">
+                    {post.category}
+                  </span>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <span className="text-sm text-gray-500">{post.date}</span>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {post.title}
+                </h3>
+
+                <p className="text-gray-600 mb-4 line-clamp-2 flex-grow">
+                  {post.excerpt}
+                </p>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-amber-600 font-semibold hover:text-amber-700 transition-colors flex items-center mt-auto"
+                >
+                  Read More
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </motion.button>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+      </section>
 
       {/* Testimonials Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-amber-50 to-amber-100/30">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl sm:text-5xl script-heading-regular mb-4">
+            What Our <span className="script-heading">Clients</span> Say
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Discover why our customers love our curated collection and service
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial="initial"
+          animate="animate"
+          transition={{ staggerChildren: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+        >
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              variants={cardVariants}
+              whileHover={{ y: -10 }}
+              className="bg-white rounded-xl shadow-xl p-6 border border-transparent hover:border-amber-200 transition-all relative"
+            >
+              {/* Quote Icon */}
+              <div className="absolute -top-4 right-6">
+                <motion.div
+                  initial={{ rotate: -15, scale: 0 }}
+                  animate={{ rotate: 0, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-amber-100 text-amber-800 p-3 rounded-full"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                </motion.div>
+              </div>
+
+              {/* Profile Image */}
+              <div className="flex justify-center mb-4">
+                <motion.div
+                  className="w-20 h-20 rounded-full overflow-hidden border-2 border-amber-200"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              </div>
+
+              {/* Content */}
+              <div className="text-center">
+                <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
+                <h3 className="font-bold text-gray-900">{testimonial.name}</h3>
+                <p className="text-amber-600 text-sm">{testimonial.role}</p>
+
+                {/* Rating Stars */}
+                <div className="flex justify-center items-center mt-3">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.1 * i }}
+                      className="text-amber-400"
+                    >
+                      ⭐
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
       {/* Subscribe Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <motion.div 
@@ -169,7 +390,7 @@ const HomePage = () => {
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
               Subscribe to our Newsletter
             </h3>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 -mt-4">
               Stay updated with the latest news and exclusive offers.
             </p>
             <form className="flex flex-col sm:flex-row gap-4">
