@@ -13,12 +13,12 @@ const categories = [
   {
     href: "/category/living-room-furniture",
     name: "Living Room Furniture",
-    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/o29eemecxq8p4tvye2zf.jpg",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/wokvydjxx8nbnoqdrv2q.webp",
   },
   {
     href: "/category/bedroom-furniture",
     name: "Bedroom Furniture",
-    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742231446/products/p2b8f0mhmuxatncspoti.webp",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742231446/products/cr6dlosp7rpjaqizkrgd.jpg",
   },
   {
     href: "/category/dining-office-furniture",
@@ -38,7 +38,7 @@ const categories = [
   {
     href: "/category/cutlery",
     name: "Cutlery & KitchenWae",
-    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742227568/products/yll2j6ocaflvnwu3cs7k.webp",
+    imageUrl: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742227568/products/boaz8fonyefw6ykp760d.jpg",
   },
 ];
 
