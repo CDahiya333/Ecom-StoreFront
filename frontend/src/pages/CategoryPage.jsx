@@ -77,7 +77,7 @@ const CategoryPage = () => {
         >
           <div>{formattedCategory}</div>
           <div>
-            <Utensils className="w-12 h-12 text-amber-900 ml-2" />
+            {/* <Utensils className="w-12 h-12 text-amber-900 ml-2" /> */}
           </div>
         </motion.h1>
 
