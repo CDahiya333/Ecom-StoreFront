@@ -24,9 +24,17 @@ const CartPage = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-8">
         {/* Cart Items Section */}
         <div className="flex-1 flex-col flex-wrap">
-          <div className=" flex flex-row justify-center items-center text-5xl text-center mt-10 sm:mt-12 md:mt-4 lg:mt-2 script-heading-regular mb-6">
-            Cart <ShoppingBag className="justify-center items-center text-center script-heading-regular ml-2" size={42}/> 
-          </div>
+          {cart.length !== 0 ? (
+            <div className=" flex flex-row justify-center items-center text-5xl text-center mt-10 sm:mt-12 md:mt-4 lg:mt-2 script-heading-regular mb-6">
+              Cart{" "}
+              <ShoppingBag
+                className="justify-center items-center text-center script-heading-regular ml-2"
+                size={42}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
 
           {isLoading ? (
             <div className="flex justify-center py-12">
