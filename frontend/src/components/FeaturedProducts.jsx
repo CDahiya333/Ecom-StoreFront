@@ -111,7 +111,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
           animate={{ opacity: 1, y: 0 }}
           className="text-xl sm:text-2xl lg:text-3xl font-bold heading-font -mt-5 text-amber-900 mb-4"
         >
-          Trending Products
+          Best Sellers
         </motion.h3>
         {(isPrevAvailable || isNextAvailable) && <NavigationButtons />}
       </div>
@@ -251,7 +251,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                         const controls = cartControls[product._id];
                         controls.start({
                           x: [0, 40, 0],
-                          backgroundColor: ["#fbbf24", "#f59e0b", "#fbbf24"],
+                          backgroundColor: ["#fbbf24", "#fbbf24", "#fbbf24"],
                           transition: {
                             duration: 1,
                             times: [0, 0.5, 1],
@@ -259,7 +259,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                           }
                         });
                       }}
-                      className="flex items-center justify-center bg-amber-400 hover:bg-amber-500 text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
+                      className="flex items-center justify-center bg-amber-400 hover:bg-amber-400 fill-none text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

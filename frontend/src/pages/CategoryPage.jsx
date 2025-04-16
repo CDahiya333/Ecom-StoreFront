@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 // eslint-disable-next-line
 import { motion } from "framer-motion";
 import useProductStore from "../Stores/useProductStore.js";
-import ProductCard from "../components/ProductCard.jsx";
+import ProductCard from "../components/productCard.jsx";
 
 const CategoryPage = () => {
   const { fetchProductByCategory, products, loading } = useProductStore();
@@ -24,7 +24,7 @@ const CategoryPage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-4xl sm:text-5xl font-bold text-center mb-8 heading-font text-amber-900"
+          className="text-4xl mt-10 sm:text-5xl font-bold text-center mb-8 script-heading-regular text-amber-900 sm:mt-12 md:mt-8 lg:mt-2"
         >
           {formattedCategory}
         </motion.h1>

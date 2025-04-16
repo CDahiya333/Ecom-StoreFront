@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom"; If I want to add indivual page for each product later
 import { motion } from "framer-motion";
 import { ShoppingCart, Heart, Bookmark } from "lucide-react";
 import toast from "react-hot-toast";
@@ -22,17 +22,21 @@ const ProductCard = ({ product }) => {
   };
 
   return (
+// Product Card Container
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all w-full sm:w-[280px] h-[500px] relative"
     >
-      <Link to={`/product/${product._id}`}>
+      {/* <Link to={`/product/${product._id}`}> */}
         <motion.div 
           className="h-[280px] w-full bg-gray-50"
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.03 }}
           transition={{ duration: 0.3 }}
+          whileTap={{ scale: 0.95 }}
+          ease="easeInOut"
+
         >
           <img
             src={product.image}
@@ -40,11 +44,11 @@ const ProductCard = ({ product }) => {
             className="w-full h-full object-cover"
           />
         </motion.div>
-      </Link>
-
+      {/* </Link> */}
+{/* Product Name */}
       <div className="p-4 sm:p-6 flex flex-col items-center h-[220px] relative">
-        <Link to={`/product/${product._id}`}>
-          <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 text-center line-clamp-2">
+        {/* <Link to={`/product/${product._id}`}> */}
+          <h4 className="text-xl sm:text-xl font-semibold text-gray-900 mb-2 text-center line-clamp-3">
             {product.name}
           </h4>
 
@@ -54,17 +58,18 @@ const ProductCard = ({ product }) => {
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.5 }}
           />
-
-          <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
+{/* Description */}
+          <p className="text-sm text-gray-600 text-center line-clamp-3 mb-4">
             {product.description}
           </p>
-        </Link>
+        {/* </Link> */}
 
-        {/* Price and Actions Section */}
+{/* Price and Actions Section */}
         <div className="absolute bottom-0.5 left-0 right-0 flex items-center justify-between px-0 w-full">
-          <p className="text-gray-900 font-bold text-lg relative bottom-2 left-2">
+          <p className="text-gray-900 font-bold text-2xl relative bottom-2 left-2">
             ${product.price}
           </p>
+{/* Action Buttons */}
           <div className="flex gap-2 absolute -bottom-2 -right-2">
             <ActionButton
               Icon={Bookmark}

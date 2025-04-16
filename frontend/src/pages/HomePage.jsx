@@ -6,6 +6,7 @@ import "../index.css";
 import useProductStore from "../Stores/useProductStore.js";
 import FeaturedProducts from "../components/FeaturedProducts.jsx";
 import Footer from "../components/Footer.jsx";
+import ProductOfTheWeek from "../components/ProductOfTheWeek.jsx";
 
 // Categories data from Cloudinary
 const categories = [
@@ -60,6 +61,14 @@ const HomePage = () => {
     console.log("Loading state:", loading);
   }, [products, loading]);
 
+  // Hard-coded product for Product of the Week
+  const productOfTheWeek = {
+    name: "Elegant Sofa",
+    description: "A luxurious and comfortable sofa that adds elegance to any living room.",
+    price: "999.99",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/o29eemecxq8p4tvye2zf.jpg",
+  };
+
   return (
     <div className="min-h-screen bg-amber-50 text-gray-800">
       {/* Category Section */}
@@ -68,10 +77,9 @@ const HomePage = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-4xl sm:text-5xl font-bold text-center mb-12 pt-4 text-amber-900  heading-font"
+          className="text-4xl sm:text-5xl script-heading-regular text-black text-center mb-12 pt-4  heading-font"
         >
-          Discover our <span className="script-heading">Exclusive</span>{" "}
-          collections
+          Our<span className="script-heading ">Luxurious</span> collections
         </motion.h2>
         <motion.div
           initial="initial"
@@ -118,8 +126,8 @@ const HomePage = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-bold mb-4 heading-font">
-            Our <span className="script-heading font-size-[50px]">Luxurious</span> Selections
+          <h2 className="text-6xl font-bold mb-4 script-heading-regular">
+            Our <span className="script-heading font-size-8xl"> Weekly</span> Selections
           </h2>
           {!loading && products && products.length > 0 ? (
             <FeaturedProducts featuredProducts={products} />
@@ -133,9 +141,59 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      {/* BLog Section */}
+      {/* Product of the Week Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <ProductOfTheWeek product={productOfTheWeek} />
+      </section>
+
+      {/* Blog Section */}
+
       {/* Testimonials Section */}
       {/* Subscribe Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:border-amber-200 flex flex-col lg:flex-row"
+        >
+          {/* Email Input Section - Left Half */}
+          <div className="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+              Subscribe to our Newsletter
+            </h3>
+            <p className="text-lg text-gray-600 mb-8">
+              Stay updated with the latest news and exclusive offers.
+            </p>
+            <form className="flex flex-col sm:flex-row gap-4">
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <button 
+                type="submit" 
+                className="bg-amber-400 text-white px-6 py-3 rounded-md hover:bg-amber-500 transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+
+          {/* Image Section - Right Half */}
+          <motion.div 
+            className="lg:w-1/2 h-[300px] sm:h-[400px] lg:h-[600px] bg-gray-50"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img
+              src="https://res.cloudinary.com/ddxhvcrtu/image/upload/v1744819165/products/wokvydjxx8nbnoqdrv2q.webp"
+              alt="Newsletter"
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </motion.div>
+      </section>
 
       {/* Footer */}
       <Footer />
