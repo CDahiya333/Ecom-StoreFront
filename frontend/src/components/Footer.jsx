@@ -72,9 +72,9 @@ const Footer = () => {
         </div>
 
         {/* Social Media & Newsletter */}
-        <div className="mt-12 pt-8 border-t border-amber-800">
+        <div className="mt-12 pt-8 border-t border-amber-800 flex flex-col md:flex-row justify-evenly items-center">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex space-x-6">
+            <div className="flex space-x-6 gap-20">
               <a href="#" className="text-amber-200/80 hover:text-amber-100 transition-colors duration-200">
                 <Facebook size={24} />
               </a>
@@ -89,7 +89,7 @@ const Footer = () => {
               </a>
             </div>
 
-            {/* Newsletter Signup */}
+            {/* Newsletter Signup
             <div className="flex items-center space-x-2">
               <input
                 type="email"
@@ -105,7 +105,7 @@ const Footer = () => {
               >
                 Subscribe
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
