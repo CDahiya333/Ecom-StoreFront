@@ -110,7 +110,7 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      {/* Placeholder for Additional Sections */}
+      {/* Featured Products Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -132,6 +132,10 @@ const HomePage = () => {
           )}
         </motion.div>
       </section>
+
+      {/* BLog Section */}
+      {/* Testimonials Section */}
+      {/* Subscribe Section */}
 
       {/* Footer */}
       <Footer />
