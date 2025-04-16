@@ -12,16 +12,22 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import assistantRoutes from "./routes/assistantRoutes.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS;
 const __dirname = path.resolve();
 
 // MiddleWares
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(cors({
+  origin: ALLOWED_ORIGINS,
+  credentials: true,
+}));
 
 // app.get("/", (req, res) => {
 //   res.send("Server is Running");
@@ -43,6 +49,9 @@ if(process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
+app.get("/", (req, res) => {
+  res.send("Server is Running");
+});
 app.listen(PORT, () => {
   console.log(`Listening on PORT:${PORT}`);
   connectDB();

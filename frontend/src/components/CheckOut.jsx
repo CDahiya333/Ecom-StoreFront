@@ -67,7 +67,7 @@ const CheckOut = () => {
   return (
     <div>
       {/* Coupon Code Interface */}
-      <div className="w-full  bg-white rounded-xl shadow-xl p-6 h-fit py-2.5 my-15">
+      <div className="w-full  bg-white rounded-xl shadow-xl p-6 h-fit py-2.5 my-15 flex flex-col flex-wrap">
         <h2 className="text-2xl font-bold mb-4">Apply Coupon</h2>
         <form onSubmit={handleApplyCoupon} className="space-y-4">
           <input
@@ -87,7 +87,7 @@ const CheckOut = () => {
             } text-white transition-colors`}
             disabled={isCouponApplied}
           >
-            {isCouponApplied ? "Coupon Applied" : "Apply Code"}
+            {coupon ? "Coupon Applied" : "Apply Code"}
           </button>
         </form>
         {couponFeedback && (
@@ -111,6 +111,7 @@ const CheckOut = () => {
             Remove Coupon
           </button>
         )}
+        {/* Savings : Delete Trash Icon */}
         {coupon && (
           <div className="text-md font-medium flex justify-evenly ">
             <p className="text-green-600 mt-2">

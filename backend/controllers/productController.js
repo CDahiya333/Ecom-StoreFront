@@ -147,7 +147,7 @@ export const getRecommendedProducts = async (req, res) => {
     const products = await Product.aggregate([
       {
         $sample: {
-          size: 3,
+          size: 6,
         },
       },
       {
