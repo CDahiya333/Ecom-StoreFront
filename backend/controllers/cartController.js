@@ -1,17 +1,6 @@
 import Product from "../models/productModel.js";
 import User from "../models/userModel.js";
-/**
- * Get the cart items for the current user.
- *
- * Returns an array of product objects with an additional `quantity` field
- * representing the quantity of each item in the user's cart.
- *
- * If the user has no cart items, returns an empty array.
- *
- * @param {import("express").Request} req - The Express HTTP request.
- * @param {import("express").Response} res - The Express HTTP response.
- * @returns {Promise<Product[]>} The list of cart items.
- */
+
 export const getCart = async (req, res) => {
   try {
     const user = req.user;
@@ -51,16 +40,6 @@ export const getCart = async (req, res) => {
     throw error;
   }
 };
-
-/**
- * @param {Object} req - The request object containing the productId in the body
- * and the user object.
- * @param {Object} res - The response object used to return the updated cart.
- *
- * The user's cartItems array is ensured to be an array of objects with each
- * object containing an _id and quantity field. The function checks if the
- * product already exists in the cart and updates the quantity accordingly.
- */
 
 export const addToCart = async (req, res) => {
   try {
@@ -160,15 +139,10 @@ export const deleteFromCart = async (req, res) => {
     const { productId } = req.body;
     const user = req.user;
 
-    console.log("Delete request received for productId:", productId);
-
     if (!productId) {
       user.cartItems = [];
     } else {
-      user.cartItems = user.cartItems.filter((item) => {
-        const itemId = item._id ? item._id.toString() : null;
-        return itemId !== productId;
-      });
+      user.cartItems = user.cartItems.filter((item) => item.id !== productId);
     }
     console.log("Cart after deletion:", user.cartItems);
     await user.save();

@@ -14,6 +14,7 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import useCartStore from "./Stores/useCartStore.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage.jsx";
+import PurchaseCancelPage from "./pages/PurchaseCancelPage.jsx";
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const { getCartItems } = useCartStore();
@@ -58,6 +59,10 @@ function App() {
             <Route
               path="/purchase-success"
               element={user ? <PurchaseSuccessPage /> : <LoginPage />}
+            />
+            <Route
+              path="/purchase-cancelled"
+              element={user ? <PurchaseCancelPage /> : <LoginPage />}
             />
           </Routes>
         </ErrorBoundary>

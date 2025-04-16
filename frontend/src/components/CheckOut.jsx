@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useCartStore from "../Stores/useCartStore";
 import { useState } from "react";
 import { ExternalLink, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
+import axios from "../lib/axios";
 
 const stripePromise = loadStripe(
   "pk_test_51REBzFHPalGUMZWuoeNfoCl2Pgh3aa6xIS6g0jqfBlKBoqG2lHaRAbTcw9v0v8F7NkwAG8tp1Z90QtyBucUhTi3q00CMJtK7ZB"
@@ -17,8 +17,13 @@ const CheckOut = () => {
     coupon,
     applyCoupon,
     removeCoupon,
+    getMyCoupon,
     isCouponApplied,
   } = useCartStore();
+
+  useEffect(() => {
+    getMyCoupon();
+  }, [getMyCoupon]);
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
@@ -29,19 +34,15 @@ const CheckOut = () => {
   const [couponFeedback, setCouponFeedback] = useState("");
   const navigate = useNavigate();
   // const coupon = true;
+
+  useEffect(() => {
+    if (coupon) setCouponCode(coupon.code);
+  }, [coupon]);
+
   const handleApplyCoupon = (e) => {
     e.preventDefault();
-    if (couponCode.trim()) {
-      applyCoupon(couponCode.trim())
-        .then(() => {
-          setCouponFeedback("Coupon applied successfully!");
-        })
-        .catch(() => {
-          setCouponFeedback("Invalid coupon code.");
-        });
-    } else {
-      setCouponFeedback("Please enter a coupon code.");
-    }
+    if (!couponCode) return;
+    applyCoupon(setCouponCode);
   };
   const handleRemoveCoupon = () => {
     removeCoupon();
@@ -50,7 +51,7 @@ const CheckOut = () => {
   };
   const handleStripePayment = async () => {
     const stripe = await stripePromise;
-    const res = await axios.post("/api/payments/create-checkout-session", {
+    const res = await axios.post("/payments/create-checkout-session", {
       products: cart,
       couponCode: coupon ? coupon.code : null,
     });
@@ -114,7 +115,7 @@ const CheckOut = () => {
           <div className="text-md font-medium flex justify-evenly ">
             <p className="text-green-600 mt-2">
               {" "}
-              You saved: <span className="font-bold">{formattedSavings}%</span>
+              You saved: <span className="font-bold">${formattedSavings}</span>
             </p>
             <Trash
               onClick={handleRemoveCoupon}
@@ -131,7 +132,8 @@ const CheckOut = () => {
               Available Coupons
             </h3>
             <p className="mt-2 text-sm text-gray-400 flex items-center hover:text-gray-500 ">
-              {coupon.code}: <span>{coupon.discountPercentage}% OFF</span>
+              {coupon.code}:{" "}
+              <span className="ml-2">{coupon.discountPercentage}% OFF</span>
               {/* FREE4U:  <span className="ml-2">15% OFF</span> */}
             </p>
           </div>
@@ -148,14 +150,6 @@ const CheckOut = () => {
             </span>
           </p>
 
-          {savings > 0 && (
-            <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-300">Savings</dt>
-              <dd className="text-base font-medium text-amber-300">
-                -${formattedSavings}
-              </dd>
-            </dl>
-          )}
           <p className="text-2xl font-bold">
             Total: <span className="text-amber-800">${formattedTotal}</span>
           </p>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import useCartStore from "../Stores/useCartStore";
-import axios from "axios";
+import axios from "../lib/axios";
 import toast from "react-hot-toast";
 
 const PurchaseSuccessPage = () => {
@@ -24,6 +24,7 @@ const PurchaseSuccessPage = () => {
         await axios.post("/payments/checkout-success", {
           sessionId,
         });
+        console.log("Clearing Cart");
         clearCart();
       } catch (error) {
         console.log(error);
@@ -53,7 +54,7 @@ const PurchaseSuccessPage = () => {
       <Confetti
         width={width}
         height={height}
-        numberOfPieces={250}
+        numberOfPieces={750}
         recycle={false}
       />
 

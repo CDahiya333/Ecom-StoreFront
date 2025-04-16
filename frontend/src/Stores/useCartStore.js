@@ -171,7 +171,6 @@ const useCartStore = create(
         toast.error("Failed to update quantity");
       }
     },
-
     calculateTotals: () => {
       const { cart, coupon } = get();
       const subtotal = cart.reduce(
