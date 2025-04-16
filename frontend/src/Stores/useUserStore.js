@@ -78,7 +78,7 @@ const useUserStore = create((set, get) => ({
   refreshToken: async () => {
     if (get().checkingAuth) return;
 
-    set({ checkAuth: true });
+    set({ checkingAuth: true });
     try {
       const response = await axios.post("/auth/refresh-token");
       set({ checkingAuth: false });
@@ -89,34 +89,40 @@ const useUserStore = create((set, get) => ({
     }
   },
 }));
-// TODO: Implement the axios interceptors for refershing the access token every 15min
+// Set up axios interceptor for token refresh
 let refreshPromise = null;
 
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    // Only attempt refresh if it's a 401 error and we haven't tried refreshing yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+
       try {
-        // If a resh is already in progress
+        // If there's already a refresh in progress, wait for it
         if (refreshPromise) {
           await refreshPromise;
-          return axios(originalRequest);
+        } else {
+          // Start a new refresh
+          refreshPromise = useUserStore.getState().refreshToken();
+          await refreshPromise;
+          refreshPromise = null;
         }
 
-        // Start a new refresh
-        refreshPromise = useUserStore.getState().refreshToken();
-        await refreshPromise;
-        refreshPromise = null;
-
+        // After successful refresh, retry the original request
         return axios(originalRequest);
       } catch (refreshError) {
-        // refresh fails then logout
+        // If refresh fails, log out
+        console.error("Token refresh failed:", refreshError);
         useUserStore.getState().logout();
         return Promise.reject(refreshError);
       }
     }
+
+    // For other errors, just reject the promise
     return Promise.reject(error);
   }
 );
