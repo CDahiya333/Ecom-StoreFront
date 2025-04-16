@@ -63,23 +63,30 @@ const HomePage = () => {
 
   // Hard-coded product for Product of the Week
   const productOfTheWeek = {
-    name: "Elegant Sofa",
-    description: "A luxurious and comfortable sofa that adds elegance to any living room.",
-    price: "999.99",
-    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1742309862/products/o29eemecxq8p4tvye2zf.jpg",
+    name: "Luxue Scented Candles Gift Set",
+    description: "",
+    price: "219.89",
+    image: "https://res.cloudinary.com/ddxhvcrtu/image/upload/v1744817756/products/ma0wicasxw5tgjdz4hyy.png",
   };
 
   return (
     <div className="min-h-screen bg-amber-50 text-gray-800">
       {/* Category Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 w-4/5 justify-center mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-4xl sm:text-5xl script-heading-regular text-black text-center mb-12 pt-4  heading-font"
+          className="text-6xl mt-10 sm:text-4xl md:text-6xl md:mt-16 script-heading-regular text-black text-center mb-12 pt-4  heading-font"
         >
           Our<span className="script-heading ">Luxurious</span> collections
+          <motion.h3 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-xl sm:text-2xl lg:text-4xl font-bold heading-font mt-1 text-amber-900 mb-4"
+        >
+          Categories
+        </motion.h3>
         </motion.h2>
         <motion.div
           initial="initial"
@@ -126,8 +133,8 @@ const HomePage = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="text-center"
         >
-          <h2 className="text-6xl font-bold mb-4 script-heading-regular">
-            Our <span className="script-heading font-size-8xl"> Weekly</span> Selections
+          <h2 className="text-5xl sm:text-6xl  font-bold mb-4 script-heading-regular">
+            Our <span className="script-heading font-size-8xl"> Trending</span> Selections
           </h2>
           {!loading && products && products.length > 0 ? (
             <FeaturedProducts featuredProducts={products} />
@@ -142,7 +149,7 @@ const HomePage = () => {
       </section>
 
       {/* Product of the Week Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 -mt-30">
         <ProductOfTheWeek product={productOfTheWeek} />
       </section>
 
