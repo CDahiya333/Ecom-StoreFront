@@ -17,9 +17,9 @@ const ProductOfTheWeek = ({ product }) => {
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl sm:text-4xl lg:text-6xl script-heading-regular text-center mb-12 script-heading-regular text-amber-900"
+        className="text-6xl  lg:text-6xl script-heading-regular text-center mb-12 mt-12 text-black"
       >
-        Product of the Week
+        <span className="script-heading  ">Editor's</span> Pick
       </motion.h2>
 
       <motion.div
@@ -30,31 +30,30 @@ const ProductOfTheWeek = ({ product }) => {
       >
         <div className="flex h-[1000px] flex-col lg:flex-row md:h-[830px] lg:h-[750px]">
           {/* Image Section - Left Half */}
-          <motion.div
-            className=" w-full lg:w-1/2 sm:w-full h-[800px] md:h-[750px]  bg-gray-50 relative overflow-hidden"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img
+          <div className="w-full lg:w-1/2 sm:w-full h-[800px] md:h-[750px] bg-gray-50 relative overflow-hidden">
+            <motion.img
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover"
+              initial={{ scale: 1 }}
+              whileHover={{ scale: 1.04 }}
+              transition={{ duration: 0.1, ease: "easeInOut" }}
             />
             {/* Featured Badge */}
-            <div className=" absolute top-5 left-5 z-10 text-amber-800 font-bold text-xs px-4 py-2 hover:scale-105 ease-in-out duration-300 opacity-95">
+            <div className=" absolute top-5 left-5 z-10 text-amber-800 font-bold hover:scale-105 ease-in-out duration-300 opacity-95">
               <motion.div
                 initial={{ rotate: -15, scale: 0 }}
                 animate={{ rotate: 0, scale: 1 }}
-                className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full font-semibold text-sm"
+                className="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full font-medium text-xs "
               >
-                <span className="text-amber-800 text-sm ">⭐️</span>Product of
-                the Week
+                <span className="text-amber-800 text-xs ">⭐️</span>
+                <span className="text-xs">Product of the Week</span>
               </motion.div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Content Section - Right Half */}
-          <div className="h-[650px] lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative">
+          <div className="h-[850px] lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-between relative">
             <div>
               <motion.h3
                 initial={{ opacity: 0 }}
@@ -95,7 +94,7 @@ const ProductOfTheWeek = ({ product }) => {
               </p>
 
               <div className="flex items-center mb-8 mt-12 relative bottom-8">
-                <span className="text-2xl sm:text-2xl font-bold text-gray-900 line-through mt-2">
+                <span className="text-2xl sm:text-2xl font-bold text-gray-400 line-through mt-2">
                   ${product.price}
                 </span>
                 <br />
@@ -109,7 +108,7 @@ const ProductOfTheWeek = ({ product }) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-4 relative bottom-14 mt-4">
+            <div className="flex items-center gap-4 relative bottom-14 mt-12 md:bottom-24 -pb-12">
               {/* Wishlist Button */}
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}

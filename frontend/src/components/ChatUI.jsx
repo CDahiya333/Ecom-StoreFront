@@ -146,7 +146,7 @@ const ChatUI = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed z-50 bottom-24 right-8 w-1/2 max-w-[500px] h-[500px] bg-amber-50 rounded-xl shadow-2xl flex flex-col overflow-hidden border border-amber-200"
+            className="fixed z-50 bottom-20 right-8 w-[95%] sm:w-3/4 md:w-2/3 lg:w-1/2 max-w-[500px] h-[500px] bg-amber-50 rounded-xl shadow-2xl flex flex-col overflow-hidden border border-amber-200"
             variants={chatContainerVariants}
             initial="hidden"
             animate="visible"

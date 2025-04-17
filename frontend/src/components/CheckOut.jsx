@@ -156,13 +156,15 @@ const CheckOut = () => {
           </p>
 
           <button
-            className="w-full flex justify-center items-center py-2 px-4 my-4 rounded-md bg-amber-800 hover:bg-amber-700 text-white transition-colors"
+            className="w-4/5 md:static fixed bottom-8 left-4 right-4 z-10 py-4 rounded-full flex justify-center items-center md:py-2 px-4 md:my-4 md:rounded-md bg-amber-800 hover:bg-amber-700 text-white transition-colors shadow-lg md:shadow-none"
             onClick={handleStripePayment}
           >
             Proceed to Checkout
           </button>
+
+          <div className="pb-16 md:pb-0 block md:hidden"></div>
           <p
-            className="flex text-center flex-start  my-4 text-black-200 cursor-pointer text-sm pr-4"
+            className="flex text-center flex-start  my-4 text-black-200 cursor-pointer text-sm pr-4 md:pr-0"
             onClick={() => navigate("/")}
           >
             Continue Shopping <ExternalLink size={18} className="ml-2" />

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import { ShoppingCart, ChevronLeft, ChevronRight, Heart, Bookmark } from "lucide-react";
+import {
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  Bookmark,
+} from "lucide-react";
 import useCartStore from "../Stores/useCartStore.js";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+// eslint-disable-next-line
+import { motion, AnimatePresence } from "framer-motion";
 
 const FeaturedProducts = ({ featuredProducts }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -10,34 +17,102 @@ const FeaturedProducts = ({ featuredProducts }) => {
   const [favorites, setFavorites] = useState({});
   const [wishlisted, setWishlisted] = useState({});
 
-  // Animation controls for cart, heart, and bookmark
-  const cartControls = featuredProducts.reduce((acc, product) => {
-    acc[product._id] = useAnimation();
-    return acc;
-  }, {});
+  // Track which product is being animated for each animation type
+  const [animatingHeartId, setAnimatingHeartId] = useState(null);
+  const [animatingBookmarkId, setAnimatingBookmarkId] = useState(null);
+  const [animatingCartId, setAnimatingCartId] = useState(null);
 
-  const heartControls = featuredProducts.reduce((acc, product) => {
-    acc[product._id] = useAnimation();
-    return acc;
-  }, {});
+  // Animation variants
+  const heartVariants = {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.4, 1],
+      transition: {
+        duration: 0.4,
+        times: [0, 0.5, 1],
+        ease: "easeInOut",
+      },
+    },
+  };
 
-  const bookmarkControls = featuredProducts.reduce((acc, product) => {
-    acc[product._id] = useAnimation();
-    return acc;
-  }, {});
+  const bookmarkVariants = {
+    initial: { scale: 1, y: 0 },
+    animate: {
+      y: [0, -10, 0],
+      scale: [1, 1.2, 1],
+      transition: {
+        duration: 0.5,
+        times: [0, 0.5, 1],
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const cartVariants = {
+    initial: { x: 0 },
+    animate: {
+      x: [0, 40, 0],
+      transition: {
+        duration: 1,
+        times: [0, 0.5, 1],
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  // Reset animation states after animation completes
+  useEffect(() => {
+    if (animatingHeartId) {
+      const timer = setTimeout(() => {
+        setAnimatingHeartId(null);
+      }, 400); // Match the duration of the heart animation
+      return () => clearTimeout(timer);
+    }
+  }, [animatingHeartId]);
+
+  useEffect(() => {
+    if (animatingBookmarkId) {
+      const timer = setTimeout(() => {
+        setAnimatingBookmarkId(null);
+      }, 500); // Match the duration of the bookmark animation
+      return () => clearTimeout(timer);
+    }
+  }, [animatingBookmarkId]);
+
+  useEffect(() => {
+    if (animatingCartId) {
+      const timer = setTimeout(() => {
+        setAnimatingCartId(null);
+      }, 1000); // Match the duration of the cart animation
+      return () => clearTimeout(timer);
+    }
+  }, [animatingCartId]);
 
   const toggleFavorite = (productId) => {
-    setFavorites(prev => ({
+    setFavorites((prev) => ({
       ...prev,
-      [productId]: !prev[productId]
+      [productId]: !prev[productId],
     }));
+
+    // Set which product's heart should animate
+    setAnimatingHeartId(productId);
   };
 
   const toggleWishlist = (productId) => {
-    setWishlisted(prev => ({
+    setWishlisted((prev) => ({
       ...prev,
-      [productId]: !prev[productId]
+      [productId]: !prev[productId],
     }));
+
+    // Set which product's bookmark should animate
+    setAnimatingBookmarkId(productId);
+  };
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+
+    // Set which product's cart should animate
+    setAnimatingCartId(product._id);
   };
 
   // Update items per page on window resize
@@ -106,10 +181,10 @@ const FeaturedProducts = ({ featuredProducts }) => {
     <div className="relative px-4 sm:px-6 lg:px-8">
       {/* Title + Top Navigation Buttons */}
       <div className="flex flex-col items-center mb-6">
-        <motion.h3 
+        <motion.h3
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-xl sm:text-2xl lg:text-3xl font-bold heading-font -mt-5 text-amber-900 mb-4"
+          className="text-xl sm:text-2xl lg:text-3xl font-bold heading-font -mt-2 text-amber-900 mb-4"
         >
           Best Sellers
         </motion.h3>
@@ -118,8 +193,8 @@ const FeaturedProducts = ({ featuredProducts }) => {
 
       {/* Products Wrapper using Flex */}
       <AnimatePresence mode="wait">
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 justify-items-center"
+        <motion.div
+          className="flex flex-wrap justify-center w-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -128,151 +203,134 @@ const FeaturedProducts = ({ featuredProducts }) => {
           {visibleProducts.map((product, index) => (
             <motion.div
               key={product._id}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all w-full sm:w-[280px] h-[500px] relative"
+              className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 p-3 md:p-4"
               initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 y: 0,
-                transition: { delay: index * 0.1 }
-              }}
-              whileHover={{ 
-                y: -5,
-                transition: { duration: 0.2 }
+                transition: { delay: index * 0.1 },
               }}
             >
-              {/* Image Section */}
-              <motion.div 
-                className="product-image-section h-[280px] w-full bg-gray-50"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
+              <motion.div
+                className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all h-[400px] relative w-full"
+                whileHover={{
+                  y: -5,
+                  transition: { duration: 0.2 },
+                }}
               >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
+                {/* Image Section */}
+                <div className="product-image-section h-[280px] w-full bg-gray-50 overflow-hidden">
+                  <motion.img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.1, ease: "easeInOut" }}
+                  />
+                </div>
 
-              {/* Content Section */}
-              <div className="p-4 sm:p-6 flex flex-col items-center h-[220px] relative">
-                {/* Title Section */}
-                <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 text-center line-clamp-2">
-                  {product.name}
-                </h4>
+                {/* Content Section */}
+                <div className="p-4 sm:p-6 flex flex-col items-center h-[180px] relative">
+                  {/* Title Section */}
+                  <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 text-center line-clamp-2">
+                    {product.name}
+                  </h4>
 
-                {/* Divider Section */}
-                <motion.div 
-                  className="w-4/5 h-0.5 bg-amber-300 mb-3"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.5 }}
-                />
+                  {/* Divider Section */}
+                  <motion.div
+                    className="w-4/5 h-0.5 bg-amber-300 mb-3"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.5 }}
+                  />
 
-                {/* Description Section */}
-                <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
-                  {product.description}
-                </p>
+                  {/* Description Section
+                  <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
+                    {product.description}
+                  </p> */}
 
-                {/* Price and Cart Section */}
-                <div className="absolute bottom-0.5 left-0 right-0 flex items-center justify-between px-0 w-full">
-                  <p className="text-gray-900 font-bold text-lg relative bottom-2 left-2">
-                    ${product.price}
-                  </p>
-                  <div className="flex gap-2 absolute -bottom-2 -right-2">
-                    {/* Bookmark Button */}
-                    <motion.button
-                      onClick={() => {
-                        toggleWishlist(product._id);
-                        const controls = bookmarkControls[product._id];
-                        controls.start({
-                          y: [0, -10, 0],
-                          scale: [1, 1.2, 1],
-                          transition: {
-                            duration: 0.5,
-                            times: [0, 0.5, 1],
-                            ease: "easeInOut"
-                          }
-                        });
-                      }}
-                      className="hidden sm:flex items-center justify-center bg-white hover:bg-gray-50 text-gray-600 p-2 rounded-full shadow-md size-14 sm:size-12 relative bottom-10 -right-32 z-2"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <motion.div
-                        initial={{ scale: 1, y: 0 }}
-                        animate={bookmarkControls[product._id]}
+                  {/* Price and Cart Section */}
+                  <div className="relative bottom-0 left-0 right-0 flex items-center justify-between px-0 w-full">
+                    <p className="text-gray-900 font-bold text-2xl relative bottom-2 left-2">
+                      ${product.price}
+                    </p>
+                    <div className="flex gap-2 absolute -bottom-2 -right-2">
+                      {/* Bookmark Button */}
+                      <motion.button
+                        onClick={() => toggleWishlist(product._id)}
+                        className="relative -bottom-6 -right-8 sm:flex items-center justify-center bg-white hover:bg-gray-50 text-gray-600 p-2 rounded-full shadow-md size-14 sm:size-12 z-2"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <Bookmark 
-                          className={`w-7 h-7 sm:w-6 sm:h-6 ${
-                            wishlisted[product._id] 
-                              ? "fill-blue-500 text-blue-500" 
-                              : "fill-none text-gray-400"
-                          }`}
-                        />
-                      </motion.div>
-                    </motion.button>
-
-                    {/* Heart Button */}
-                    <motion.button
-                      onClick={() => {
-                        toggleFavorite(product._id);
-                        const controls = heartControls[product._id];
-                        controls.start({
-                          scale: [1, 1.4, 1],
-                          transition: {
-                            duration: 0.4,
-                            times: [0, 0.5, 1],
-                            ease: "easeInOut"
+                        <motion.div
+                          variants={bookmarkVariants}
+                          initial="initial"
+                          animate={
+                            animatingBookmarkId === product._id
+                              ? "animate"
+                              : "initial"
                           }
-                        });
-                      }}
-                      className="flex items-center justify-center bg-white hover:bg-gray-50 text-gray-600 p-2 rounded-full shadow-md size-14 sm:size-12 relative -bottom-3 -right-4 z-1"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <motion.div
-                        initial={{ scale: 1 }}
-                        animate={heartControls[product._id]}
-                      >
-                        <Heart 
-                          className={`w-7 h-7 sm:w-6 sm:h-6 ${
-                            favorites[product._id] 
-                              ? "fill-red-500 text-red-500" 
-                              : "fill-none text-gray-400"
-                          }`}
-                        />
-                      </motion.div>
-                    </motion.button>
+                        >
+                          <Bookmark
+                            className={`w-7 h-7 sm:w-6 sm:h-6 ml-1 ${
+                              wishlisted[product._id]
+                                ? "fill-blue-500 text-blue-500"
+                                : "fill-none text-gray-400"
+                            }`}
+                          />
+                        </motion.div>
+                      </motion.button>
 
-                    {/* Cart Button */}
-                    <motion.button
-                      onClick={() => {
-                        addToCart(product);
-                        const controls = cartControls[product._id];
-                        controls.start({
-                          x: [0, 40, 0],
-                          backgroundColor: ["#fbbf24", "#fbbf24", "#fbbf24"],
-                          transition: {
-                            duration: 1,
-                            times: [0, 0.5, 1],
-                            ease: "easeInOut"
-                          }
-                        });
-                      }}
-                      className="flex items-center justify-center bg-amber-400 hover:bg-amber-400 fill-none text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <motion.div
-                        initial={{ x: 0 }}
-                        animate={cartControls[product._id]}
+                      {/* Heart Button */}
+                      <motion.button
+                        onClick={() => toggleFavorite(product._id)}
+                        className="relative -bottom-5 -right-7 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-600 p-2 rounded-full shadow-md size-14 sm:size-12 z-1"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <ShoppingCart className="w-8 h-8 sm:w-8 sm:h-8" />
-                      </motion.div>
-                    </motion.button>
+                        <motion.div
+                          variants={heartVariants}
+                          initial="initial"
+                          animate={
+                            animatingHeartId === product._id
+                              ? "animate"
+                              : "initial"
+                          }
+                        >
+                          <Heart
+                            className={`w-7 h-7 sm:w-6 sm:h-6 ${
+                              favorites[product._id]
+                                ? "fill-red-500 text-red-500"
+                                : "fill-none text-gray-400"
+                            }`}
+                          />
+                        </motion.div>
+                      </motion.button>
+
+                      {/* Cart Button */}
+                      <motion.button
+                        onClick={() => handleAddToCart(product)}
+                        className="relative -bottom-2 -right-6 flex items-center justify-center bg-amber-400 hover:bg-amber-400 fill-none text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <motion.div
+                          variants={cartVariants}
+                          initial="initial"
+                          animate={
+                            animatingCartId === product._id
+                              ? "animate"
+                              : "initial"
+                          }
+                        >
+                          <ShoppingCart className="w-8 h-8 sm:w-8 sm:h-8" />
+                        </motion.div>
+                      </motion.button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>

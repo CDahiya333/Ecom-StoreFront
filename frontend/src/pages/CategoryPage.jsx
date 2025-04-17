@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import useProductStore from "../Stores/useProductStore.js";
 import ProductCard from "../components/productCard.jsx";
-import { Delete, Utensils } from "lucide-react";
+import { Delete } from "lucide-react";
+import Footer from "../components/Footer.jsx";
 
 const materialsList = ["Cotton", "Leather", "Wood", "Silk", "Metal"];
 
@@ -113,7 +114,10 @@ const CategoryPage = () => {
           </motion.div>
 
           {/* Material Filter Pills with Clear Cross */}
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-3 justify-center w-full md:w-auto"
+          >
             {materialsList.map((material) => {
               const isSelected = selectedMaterials.includes(material);
               return (
@@ -148,15 +152,20 @@ const CategoryPage = () => {
           </motion.div>
 
           {/* Reset All Filters */}
-          <motion.button
+          <motion.div
             variants={itemVariants}
-            onClick={resetFilters}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="ml-auto bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+            className="flex justify-center w-full md:w-auto md:ml-auto"
           >
-            Reset
-          </motion.button>
+            <motion.button
+              variants={itemVariants}
+              onClick={resetFilters}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="justify-center items-center flex bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Reset
+            </motion.button>
+          </motion.div>
         </motion.div>
 
         {/* Product Grid */}
@@ -172,16 +181,25 @@ const CategoryPage = () => {
             animate="visible"
             variants={containerVariants}
             transition={{ staggerChildren: 0.15 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6"
+            className="flex flex-wrap justify-center md:justify-start w-full"
           >
             {filteredProducts.map((product) => (
-              <motion.div key={product._id} variants={itemVariants}>
-                <ProductCard product={product} />
+              <motion.div
+                key={product._id}
+                variants={itemVariants}
+                className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/5 p-3 md:p-4"
+              >
+                <div className="h-full">
+                  <ProductCard product={product} />
+                </div>
               </motion.div>
             ))}
           </motion.div>
         )}
       </div>
+      <section className="mt-10">
+        <Footer />
+      </section>
     </div>
   );
 };
