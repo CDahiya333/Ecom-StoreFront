@@ -101,8 +101,8 @@ const ProductOfTheWeek = ({ product }) => {
                 <span className="text-3xl sm:text-4xl font-bold text-gray-900">
                   189.99
                 </span>
-                <span className="ml-4 text-lg text-green-600 font-semibold">
-                  Expires in 24 hours
+                <span className="ml-4 text-xl text-red-600 font-semibold opacity-95 hover:scale-103 ease-in-out duration-300">
+                  Expires soon
                 </span>
               </div>
             </div>
