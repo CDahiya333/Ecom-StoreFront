@@ -26,7 +26,7 @@ const ProductOfTheWeek = ({ product }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:border-amber-200"
+        className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:border-amber-200 h-[1000px] md:h-[750px] lg:h-[750px]"
       >
         <div className="flex h-[1000px] flex-col lg:flex-row md:h-[830px] lg:h-[750px]">
           {/* Image Section - Left Half */}
