@@ -187,7 +187,7 @@ const CategoryPage = () => {
               <motion.div
                 key={product._id}
                 variants={itemVariants}
-                className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/5 p-3 md:p-4"
+                className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 p-3 md:p-4"
               >
                 <div className="h-full">
                   <ProductCard product={product} />

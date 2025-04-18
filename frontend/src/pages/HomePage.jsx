@@ -236,7 +236,7 @@ const HomePage = () => {
       </section>
 
       {/* Blog Section */}
-      <section className="mt-12 px-4 sm:px-6 lg:px-8 mb-12" id="blog">
+      <section className=" -mt-24 px-4 sm:px-6 lg:px-8 mb-12" id="blog">
         {/* Blog Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
