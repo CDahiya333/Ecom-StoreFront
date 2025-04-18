@@ -231,12 +231,12 @@ const HomePage = () => {
       </section>
 
       {/* Product of the Week Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 -mt-26">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 -mt-18 mb-12">
         <ProductOfTheWeek product={productOfTheWeek} />
       </section>
 
       {/* Blog Section */}
-      <section className="-mt-12 px-4 sm:px-6 lg:px-8" id="blog">
+      <section className="mt-12 px-4 sm:px-6 lg:px-8 mb-12" id="blog">
         {/* Blog Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -244,8 +244,8 @@ const HomePage = () => {
           transition={{ duration: 1 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl script-heading-regular mb-4">
-            Latest from our <span className="script-heading">Blog</span>
+          <h2 className="text-6xl  script-heading-regular mb-4">
+            <span className="script-heading mr-4">Blog</span>Tails
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover inspiration, tips, and stories about modern living and
@@ -329,8 +329,8 @@ const HomePage = () => {
           transition={{ duration: 1 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl script-heading-regular mb-4">
-            What Our <span className="script-heading">Clients</span> Say
+          <h2 className="text-5xl sm:text-5xl script-heading-regular mb-4">
+            <span className="script-heading mr-4">Client</span> Testimonials
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover why our customers love our curated collection and service
@@ -421,11 +421,11 @@ const HomePage = () => {
         >
           {/* Email Input Section - Left Half */}
           <div className="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center ">
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            <h3 className="text-2xl sm:text-3xl script-heading-regular text-gray-900 mb-4">
               Subscribe to our Newsletter
             </h3>
             <p className="text-lg text-gray-600 mb-8 -mt-4">
-              Stay updated with the latest news and exclusive offers.
+              Get the latest news and exclusive offers.
             </p>
             <form className="flex flex-col sm:flex-row gap-4">
               <input

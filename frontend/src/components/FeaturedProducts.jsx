@@ -276,7 +276,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                             className={`w-7 h-7 sm:w-6 sm:h-6 ml-1 ${
                               wishlisted[product._id]
                                 ? "fill-blue-500 text-blue-500"
-                                : "fill-none text-gray-400"
+                                : "fill-none text-blue-400"
                             }`}
                           />
                         </motion.div>
@@ -302,7 +302,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                             className={`w-7 h-7 sm:w-6 sm:h-6 ${
                               favorites[product._id]
                                 ? "fill-red-500 text-red-500"
-                                : "fill-none text-gray-400"
+                                : "fill-none text-red-400"
                             }`}
                           />
                         </motion.div>
@@ -311,7 +311,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                       {/* Cart Button */}
                       <motion.button
                         onClick={() => handleAddToCart(product)}
-                        className="relative -bottom-2 -right-6 flex items-center justify-center bg-amber-400 hover:bg-amber-400 fill-none text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
+                        className="relative -bottom-4 -right-5 flex items-center justify-center bg-amber-400 hover:bg-amber-400 fill-none text-white p-2.5 rounded-full transition-colors size-16 sm:size-16 z-3"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >

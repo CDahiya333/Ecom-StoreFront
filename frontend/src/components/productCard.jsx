@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all w-full sm:w-[280px] h-[500px] relative"
+      className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all w-full h-[400px] relative"
     >
       {/* <Link to={`/product/${product._id}`}> */}
       <motion.div
@@ -46,27 +46,27 @@ const ProductCard = ({ product }) => {
       </motion.div>
       {/* </Link> */}
       {/* Product Name */}
-      <div className="p-4 sm:p-6 flex flex-col items-center h-[220px] relative">
+      <div className="p-4 sm:p-6 flex flex-col items-start h-[220px] relative ">
         {/* <Link to={`/product/${product._id}`}> */}
-        <h4 className="text-xl sm:text-xl font-semibold text-gray-900 mb-2 text-center line-clamp-3">
+        <h4 className="text-xl md:text-xl font-semibold text-gray-900 mb-2 text-center line-clamp-1 justify-start items-center">
           {product.name}
         </h4>
-
+        {/* Divider */}
         <motion.div
-          className="w-4/5 h-0.5 bg-amber-300 mb-3"
+          className="w-full md:w-4/5 h-0.5 bg-amber-300 mb-3"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.5 }}
         />
         {/* Description */}
-        <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
+        {/* <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
           {product.description}
-        </p>
+        </p> */}
         {/* </Link> */}
 
         {/* Price and Actions Section */}
-        <div className="absolute bottom-0.5 left-0 right-0 flex items-center justify-between px-0 w-full">
-          <p className="text-gray-900 font-bold text-3xl relative bottom-2 left-2 md:text-2xl ">
+        <div className="relative -bottom-2 -left-2 right-0 flex items-center justify-between px-0 w-full">
+          <p className="text-gray-900 font-bold text-3xl relative bottom-2 left-1 md:text-2xl ">
             ${product.price}
           </p>
           {/* Action Buttons */}
@@ -78,7 +78,7 @@ const ProductCard = ({ product }) => {
               activeColor="blue"
               position="bookmark"
               animationType="bounce"
-              hideOnMobile
+              hideOnMobile={false}
             />
 
             <ActionButton
