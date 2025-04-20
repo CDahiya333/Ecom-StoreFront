@@ -19,6 +19,7 @@ export const getAnalytics = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
+// Fetch Dashboard data for Sales, users, products
 async function getAnalyticsStats() {
   try {
     const totalUsers = await User.countDocuments();
@@ -50,6 +51,7 @@ async function getAnalyticsStats() {
     return res.status(500).json({ message: "Server Error" });
   }
 }
+// Fetch Sales data for the last 7 days for plotting the Graph
 async function getGraphData(startDate, endDate) {
   try {
     const graphData = await Order.aggregate([

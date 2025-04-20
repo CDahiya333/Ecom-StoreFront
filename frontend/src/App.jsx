@@ -35,7 +35,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-800 text-white relative overflow-hidden">
-      {/* <div>Background Styling</div> */}
       <div>
         <Navbar />
         <ChatUI />

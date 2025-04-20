@@ -38,7 +38,7 @@ export const createCheckoutSession = async (req, res) => {
         isActive: true,
       });
       if (coupon) {
-        // Creating a Strip Coupon
+        // Creating a Stripe Coupon
         const stripeCouponId = await createStripeCoupon(
           coupon.discountPercentage
         );
@@ -92,7 +92,7 @@ async function createStripeCoupon(discountPercentage) {
   });
   return coupon.id;
 }
-// Creating new coupon and saving to db
+// Creating NewCoupon for next purchase
 async function createNewCoupon(userId) {
   await Coupon.findOneAndDelete({ userId });
   const newCoupon = new Coupon({

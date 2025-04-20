@@ -1,39 +1,36 @@
 @import "tailwindcss";
-/* src/index.css */
 
-/* Apply a default font family to the body if desired */
 body {
-    font-family: 'Montserrat', sans-serif;
-  }
-  
-  /* Create custom classes for headings */
-  .heading-font {
-    font-family: 'Playfair Display', serif;
-    letter-spacing: 1px;
-  }
-  
-  /* And for other text if needed */
-  .body-font {
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.3px;
-  }
-  
-  .script-heading {
-    font-family: "Luxurious Script", cursive;
-    font-weight: 500;
-    font-style: normal;
-    font-size: 80px;
-  }
-  
-  .script-heading-regular {
-    font-family: "Luxurious Roman", serif;
-    font-weight: 600;
-    font-style: normal;
-  }
-  
-.bodoni-moda-font{
-    font-family: "Bodoni Moda", serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: italic;
-  }
+  font-family: "Montserrat", sans-serif;
+}
+
+.heading-font {
+  font-family: "Playfair Display", serif;
+  letter-spacing: 1px;
+}
+
+.body-font {
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0.3px;
+}
+
+/* Cursive Font for Headings */
+.script-heading {
+  font-family: "Luxurious Script", cursive;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 80px;
+}
+/* Plain Font for Heading Contrast  */
+.script-heading-regular {
+  font-family: "Luxurious Roman", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.bodoni-moda-font {
+  font-family: "Bodoni Moda", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: italic;
+}

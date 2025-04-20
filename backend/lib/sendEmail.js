@@ -1,15 +1,19 @@
 import nodemailer from "nodemailer";
 
+// EMAIL sending Utitlity
+// GMAIL_USER: Store's Domain Email
+// GMAIL_PASS: Created using Third party app access
+
 const sendEmail = async (email, otp) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
         user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-      }
+        pass: process.env.GMAIL_PASS,
+      },
     });
-    
+
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: email,
@@ -24,11 +28,13 @@ const sendEmail = async (email, otp) => {
           <p>This code will expire in 5 minutes.</p>
           <p>If you didn't request this code, please ignore this email.</p>
         </div>
-      `
+      `,
     };
-    
+
     const info = await transporter.sendMail(mailOptions);
-    console.log(`Email OTP sent successfully to: ${email}, Message ID: ${info.messageId}`);
+    console.log(
+      `Email OTP sent successfully to: ${email}, Message ID: ${info.messageId}`
+    );
     return { success: true, message: "Email OTP sent successfully" };
   } catch (error) {
     console.log("Error in sendEmail:", error.message);

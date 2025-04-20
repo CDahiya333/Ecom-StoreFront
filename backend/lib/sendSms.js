@@ -3,9 +3,13 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = new twilio(accountSid, authToken);
 
+// SMS Sending Utility
+// Will use Tiwilio for Demo purpose
+// Could use SendGrid or Cheaper alternatives for Production
+// Will think later about this
+
 const sendSms = async (phone, otp) => {
   try {
-    // console.log("Trying to Send SMS");
     const message = await client.messages.create({
       body: `Your OTP is ${otp}`,
       from: process.env.TWILIO_PHONE_NUMBER,

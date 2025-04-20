@@ -11,4 +11,4 @@ const generateTokens = (userId) => {
   storeRefreshToken(userId, refreshToken);
   return { accessToken, refreshToken };
 };
-export default generateTokens
+export default generateTokens;

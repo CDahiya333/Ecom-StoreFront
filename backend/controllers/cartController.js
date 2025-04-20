@@ -134,6 +134,7 @@ export const updateQuantity = async (req, res) => {
   }
 };
 
+// Delete a product from the cart entirely using productId
 export const deleteFromCart = async (req, res) => {
   try {
     const { productId } = req.body;

@@ -30,6 +30,7 @@ const ProductCard = ({ product }) => {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:border-amber-200 transition-all w-full h-[400px] relative"
     >
+      {/* Will add Product Page Links Later */}
       {/* <Link to={`/product/${product._id}`}> */}
       <motion.div
         className="h-[280px] w-full bg-gray-50"
@@ -58,11 +59,6 @@ const ProductCard = ({ product }) => {
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.5 }}
         />
-        {/* Description */}
-        {/* <p className="text-sm text-gray-600 text-center line-clamp-2 mb-4">
-          {product.description}
-        </p> */}
-        {/* </Link> */}
 
         {/* Price and Actions Section */}
         <div className="relative -bottom-2 -left-2 right-0 flex items-center justify-between px-0 w-full">
@@ -96,7 +92,7 @@ const ProductCard = ({ product }) => {
               size="large"
               position="cart"
               animationType="slide"
-              className="bg-amber-400 text-white hover:bg-amber-400 text-amber-400"
+              className="bg-amber-400 text-white hover:bg-amber-400 "
             />
           </div>
         </div>

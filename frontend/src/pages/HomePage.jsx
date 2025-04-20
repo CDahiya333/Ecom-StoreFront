@@ -48,7 +48,7 @@ const categories = [
   },
 ];
 
-// Hard-coded  Blog posts data will ad native blog support later
+// Hard-coded  Blog posts data will Integrate Native Blog Support Later
 const blogPosts = [
   {
     id: 1,
@@ -82,7 +82,7 @@ const blogPosts = [
   },
 ];
 
-// Hard-coded testimonials data
+// Hard-coded testimonials data will Integrate Native Testimonial Support Later
 const testimonials = [
   {
     id: 1,
@@ -135,7 +135,7 @@ const HomePage = () => {
     console.log("Loading state:", loading);
   }, [products, loading]);
 
-  // Hard-coded product for Product of the Week
+  // Hard-coded product for Product of the Week can add a toggle Similar to Featured Products
   const productOfTheWeek = {
     name: "Luxue Scented Candles Gift Set",
     description: "",

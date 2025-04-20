@@ -8,13 +8,16 @@ const API_KEY = process.env.MODEL_PROVIDER_API_KEY;
 
 let productListCache = null;
 let lastFetchTime = 0;
-const CACHE_TTL = 15 * 60 * 1000; // 15 minutes in milliseconds
+const CACHE_TTL = 15 * 60 * 1000;
 
+// Fetch Product List to Feed to the System Prompt for more Context Aware Responses
+// Using the our Store's Product Catalog as a Base Prompt
+// Later can be extended to show products links directly in the Chat UI
 async function getModelResponse(userMessage) {
   try {
     // Get system prompt
     const systemPrompt = await getSystemPromptWithProducts();
-    
+
     switch (MODEL_PROVIDER) {
       case "google":
         return await getGeminiResponse(systemPrompt, userMessage);
@@ -33,7 +36,7 @@ async function getModelResponse(userMessage) {
 
 async function getSystemPromptWithProducts() {
   const now = Date.now();
-  if (!productListCache || (now - lastFetchTime > CACHE_TTL)) {
+  if (!productListCache || now - lastFetchTime > CACHE_TTL) {
     try {
       productListCache = await getFormattedProductList();
       lastFetchTime = now;
@@ -41,11 +44,12 @@ async function getSystemPromptWithProducts() {
       console.error("Error fetching products, using demo list:", error);
     }
   }
-  
+
   const basePrompt = SYSTEM_PROMPT();
   return basePrompt.replace("${productList}", productListCache || "");
 }
 
+// Gemini Route: Free API (using this for Demo Purposes)
 async function getGeminiResponse(systemPrompt, userMessage) {
   try {
     const response = await fetch(
@@ -87,7 +91,7 @@ async function getGeminiResponse(systemPrompt, userMessage) {
     throw error;
   }
 }
-
+// OpenAI Route: Paid API
 async function getOpenAIResponse(systemPrompt, userMessage) {
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -121,7 +125,7 @@ async function getOpenAIResponse(systemPrompt, userMessage) {
     throw error;
   }
 }
-
+// Claude Route: Paid API
 async function getClaudeResponse(systemPrompt, userMessage) {
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {

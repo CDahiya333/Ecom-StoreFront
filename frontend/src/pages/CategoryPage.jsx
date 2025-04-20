@@ -77,9 +77,6 @@ const CategoryPage = () => {
           className="text-4xl mt-10 sm:text-5xl flex justify-center items-center sm:mt-18 md:mt-18 lg:mt-4 font-bold text-center mb-8 script-heading-regular text-amber-900"
         >
           <div>{formattedCategory}</div>
-          <div>
-            {/* <Utensils className="w-12 h-12 text-amber-900 ml-2" /> */}
-          </div>
         </motion.h1>
 
         {/* Animated Filter Section */}
@@ -107,9 +104,7 @@ const CategoryPage = () => {
                 onClick={() => setPriceFilter("")}
                 className="text-gray-500 hover:text-gray-700 focus:outline-none"
                 aria-label="Clear price filter"
-              >
-                {/* &times; */}
-              </button>
+              ></button>
             )}
           </motion.div>
 

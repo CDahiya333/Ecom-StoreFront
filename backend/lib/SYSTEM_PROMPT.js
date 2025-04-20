@@ -1,11 +1,10 @@
-// lib/SYSTEM_PROMPT.js
 import { getFormattedProductList } from "../services/ProductService.js";
 
 const SYSTEM_PROMPT = () => {
   // Get the product list (demo version for now)
   const productList = getFormattedProductList();
 
-  // Return the system prompt with the product list inserted
+  // Send the SYSTEM PROMPT with Store's Product Catalog and Response Guidelines
   return `You are an intelligent and knowledgeable Chat Assistant for Maison Elegance, an upscale e-commerce site
    specializing in premium wooden furniture, home decor, candles, and related luxury home products.
 

@@ -12,6 +12,7 @@ const RecommendedProducts = () => {
   return (
     <>
       <h2 className="flex text-4xl items-center justify-center sm:text-5xl md:text-5xl font-bold mb-4 heading-font text-center">
+        {/* Will Hide Commonly on Small screens */}
         <span className="hidden sm:block">Commonly</span>
         <span className="script-heading text-xl mr-6 ml-4"> Bought</span>
         Together

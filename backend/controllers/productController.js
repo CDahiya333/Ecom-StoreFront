@@ -2,6 +2,8 @@ import Product from "../models/productModel.js";
 import redis from "../lib/redis.js";
 import cloudinary from "../lib/cloudinary.js";
 import fs from "fs";
+
+// Fetch All Products
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({});
@@ -45,11 +47,9 @@ export const createProduct = async (req, res) => {
     let imageUrl = "";
 
     if (req.file) {
-      // Log for debugging
       console.log("File received:", req.file);
 
       try {
-        // Use the absolute path to the file
         const filePath = req.file.path;
         console.log("File path:", filePath);
 
@@ -66,8 +66,6 @@ export const createProduct = async (req, res) => {
 
         console.log("Cloudinary result:", result);
         imageUrl = result.secure_url;
-
-        // Optional: Delete the file after upload to cloudinary
         fs.unlink(filePath, (err) => {
           if (err) console.log("Error deleting file:", err);
         });
@@ -78,7 +76,7 @@ export const createProduct = async (req, res) => {
           .json({ message: "Image upload failed: " + uploadErr.message });
       }
     } else if (req.body.image) {
-      // For image URL from the request body
+      // ImageURL present in request body
       try {
         console.log("Using image URL:", req.body.image);
         const result = await cloudinary.uploader.upload(req.body.image, {
@@ -122,7 +120,7 @@ export const deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-
+    // Deleting Image from Cloundinary
     if (product.image) {
       const publicId = product.image.split("/").pop().split(".")[0];
       try {
@@ -132,8 +130,6 @@ export const deleteProduct = async (req, res) => {
         console.log("error deleting image from cloudinary", error);
       }
     }
-
-    // Fix: Use Product model to delete, not the product instance
     await Product.findByIdAndDelete(id);
     res.status(200).json({ message: "Product Deleted Successfully" });
   } catch (error) {
@@ -142,6 +138,8 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+// For returning 6 random Products in Cart Page
+// Can use more advanced Recommendation Algorithm logic here
 export const getRecommendedProducts = async (req, res) => {
   try {
     const products = await Product.aggregate([
@@ -178,7 +176,7 @@ export const getProductsbyCategory = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// Toggle in MondoDB and Update Redis Cache
 export const toggleFeaturedProducts = async (req, res) => {
   try {
     const { id } = req.params;
@@ -188,7 +186,6 @@ export const toggleFeaturedProducts = async (req, res) => {
       return res.status(404).json({ message: "Product Not Found" });
     } else {
       product.isFeatured = !product.isFeatured;
-      // Fix: Use the product instance to save, not the model
       const updatedProduct = await product.save();
       await featuredProductsCache();
       res.json(updatedProduct);
@@ -198,7 +195,7 @@ export const toggleFeaturedProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// Fetch Featured Products and Setting in Redis
 async function featuredProductsCache() {
   try {
     const featuredProducts = await Product.find({ isFeatured: true }).lean();

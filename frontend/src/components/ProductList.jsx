@@ -28,7 +28,6 @@ const ProductList = () => {
     deleteProduct(productId);
   };
 
-  // Helper to truncate long descriptions
   const truncate = (text, maxLength = 60) => {
     if (!text) return "";
     return text.length > maxLength

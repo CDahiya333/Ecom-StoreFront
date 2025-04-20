@@ -4,6 +4,8 @@ import { motion, useAnimation } from "framer-motion";
 import { ShoppingCart, Heart, Bookmark } from "lucide-react";
 // import useCartStore from "../Stores/useCartStore.js";
 
+// Provide ID of the Product in mock data to enable Add to Cart functionality
+// Will add a Permanent Fix by allowing toggling in Admin DashBoard
 const ProductOfTheWeek = ({ product }) => {
   //   const { addToCart } = useCartStore();
   const [isFavorite, setIsFavorite] = useState(false);
